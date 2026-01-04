@@ -1,1 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seedlings - Kurnalpi Organics</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* ========================
+   PAGE + FOOTER SUPPORT
+   ======================== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.page-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    position: relative;
+    padding: 40px;
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: -1;
+}
+
+/* ========================
+   PRODUCT GRID
+   ======================== */
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.product-card {
+    background: rgba(47, 93, 58, 0.85);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.product-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    margin: 10px 0 5px;
+}
+
+.product-card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.product-card button {
+    background: #1f4d30;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.product-card button:hover {
+    background: #163823;
+}
+
+/* ========================
+   FOOTER
+   ======================== */
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: rgba(47, 93, 58, 0.85);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+<!-- ========================
+     HEADER
+     ======================== -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html">
+            <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
+        </a>
+
+        <div class="hamburger" id="hamburger">&#9776;</div>
+
+        <nav class="nav" id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="cart.html" class="cart">🛒 <span id="cart-total">R0</span></a>
+        </nav>
+    </div>
+</header>
+
+<!-- ========================
+     MAIN CONTENT
+     ======================== -->
+<main>
+    <h1>Seedlings</h1>
+    <p>Organic seedlings to start your sustainable garden at home.</p>
+
+    <div class="products">
+
+        <!-- PRODUCT 1 -->
+        <div class="product-card">
+            <img src="tomato-seedling.png" alt="Tomato Seedling">
+            <h3>Tomato Seedling</h3>
+            <p>Healthy tomato seedlings ready to plant.</p>
+            <div class="price">R35</div>
+            <button data-name="Tomato Seedling" data-price="35">
+                Add to Cart
+            </button>
+        </div>
+
+        <!-- PRODUCT 2 -->
+        <div class="product-card">
+            <img src="basil-seedling.png" alt="Basil Seedling">
+            <h3>Basil Seedling</h3>
+            <p>Fresh organic basil seedlings for your kitchen garden.</p>
+            <div class="price">R25</div>
+            <button data-name="Basil Seedling" data-price="25">
+                Add to Cart
+            </button>
+        </div>
+
+        <!-- PRODUCT 3 -->
+        <div class="product-card">
+            <img src="lettuce-seedling.png" alt="Lettuce Seedling">
+            <h3>Lettuce Seedling</h3>
+            <p>Crisp and fresh lettuce seedlings for home planting.</p>
+            <div class="price">R30</div>
+            <button data-name="Lettuce Seedling" data-price="30">
+                Add to Cart
+            </button>
+        </div>
+
+        <!-- PRODUCT 4 -->
+        <div class="product-card">
+            <img src="spinach-seedling.png" alt="Spinach Seedling">
+            <h3>Spinach Seedling</h3>
+            <p>Organic spinach seedlings for healthy salads.</p>
+            <div class="price">R28</div>
+            <button data-name="Spinach Seedling" data-price="28">
+                Add to Cart
+            </button>
+        </div>
+
+    </div>
+</main>
+
+<!-- ========================
+     FOOTER
+     ======================== -->
+<footer>
+    &copy; 2026 Kurnalpi Organics. All rights reserved.
+</footer>
+
+</div>
+
+<script src="cart.js"></script>
+<script>
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('nav-menu');
+
+hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
+</script>
+
+</body>
+</html>
 
