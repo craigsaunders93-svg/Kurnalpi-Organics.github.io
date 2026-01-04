@@ -11,7 +11,12 @@ header {
 }
 
 .logo {
-    height: 200px;
+    .logo {
+    height: 12vw;
+    max-height: 160px;
+    min-height: 100px;
+}
+
 }
 
 nav {
