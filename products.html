@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
 /* ========================
-   MAIN STYLES (override if needed)
+   MAIN CONTENT
    ======================== */
 main {
     position: relative;
@@ -25,10 +25,18 @@ main::before {
     background: rgba(0,0,0,0.3);
     z-index: -1;
 }
-   
+
 /* ========================
-   PRODUCT CATEGORIES - INTERACTIVE HOVER
+   PRODUCT CATEGORIES - INTERACTIVE HOVER + FADE-IN
    ======================== */
+.product-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
 .category-card {
     display: flex;
     flex-direction: column;
@@ -39,8 +47,11 @@ main::before {
     padding: 20px;
     border-radius: 10px;
     width: 180px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* subtle shadow for depth */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
 }
 
 .category-card img {
@@ -60,20 +71,40 @@ main::before {
 
 /* Hover effect */
 .category-card:hover {
-    transform: translateY(-5px) scale(1.05); /* lift & slight zoom */
-    background: rgba(47, 93, 58, 1);          /* darker green */
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);   /* stronger shadow */
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(47, 93, 58, 1);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
 .category-card:hover img {
-    transform: scale(1.1);                     /* subtle image zoom */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);  /* small shadow behind image */
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .category-card:hover h3 {
-    color: #fffacd; /* light yellow text on hover for contrast */
+    color: #fffacd;
 }
 
+/* ========================
+   FADE-IN KEYFRAMES
+   ======================== */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animation delays for multiple cards */
+.product-categories .category-card:nth-child(1) { animation-delay: 0.1s; }
+.product-categories .category-card:nth-child(2) { animation-delay: 0.2s; }
+.product-categories .category-card:nth-child(3) { animation-delay: 0.3s; }
+.product-categories .category-card:nth-child(4) { animation-delay: 0.4s; }
+.product-categories .category-card:nth-child(5) { animation-delay: 0.5s; }
 
 /* ========================
    HAMBURGER MENU
@@ -85,9 +116,7 @@ main::before {
 }
 
 @media (max-width: 600px) {
-    .hamburger {
-        display: block;
-    }
+    .hamburger { display: block; }
 
     nav.nav {
         display: none;
@@ -95,18 +124,10 @@ main::before {
         width: 100%;
     }
 
-    nav.nav.active {
-        display: flex;
-    }
+    nav.nav.active { display: flex; }
 
-    .product-categories {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .category-card {
-        width: 70%;
-    }
+    .product-categories { flex-direction: column; align-items: center; }
+    .category-card { width: 70%; }
 }
 </style>
 </head>
@@ -143,31 +164,22 @@ main::before {
     <p>Explore our wide range of sustainable, organic products:</p>
 
     <div class="product-categories">
-        <!-- Garden Ornaments -->
         <a href="garden-ornaments.html" class="category-card">
             <img src="icons/garden.png" alt="Garden Ornaments">
             <h3>Garden Ornaments</h3>
         </a>
-
-        <!-- Soaps -->
         <a href="soaps.html" class="category-card">
             <img src="icons/soap.png" alt="Soaps">
             <h3>Soaps</h3>
         </a>
-
-        <!-- Arts & Crafts -->
         <a href="arts-crafts.html" class="category-card">
             <img src="icons/crafts.png" alt="Arts & Crafts">
             <h3>Arts & Crafts</h3>
         </a>
-
-        <!-- Home Fragrance -->
         <a href="home-fragrance.html" class="category-card">
             <img src="icons/fragrance.png" alt="Home Fragrance">
             <h3>Home Fragrance</h3>
         </a>
-
-        <!-- Seedlings -->
         <a href="seedlings.html" class="category-card">
             <img src="icons/seedling.png" alt="Seedlings">
             <h3>Seedlings</h3>
@@ -184,5 +196,6 @@ hamburger.addEventListener('click', () => {
     navMenu.classList.toggle('active');
 });
 </script>
+
 </body>
 </html>
