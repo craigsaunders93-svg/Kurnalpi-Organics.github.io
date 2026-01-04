@@ -89,14 +89,8 @@ main::before {
    FADE-IN KEYFRAMES
    ======================== */
 @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 .product-categories .category-card:nth-child(1) { animation-delay: 0.1s; }
@@ -116,15 +110,8 @@ main::before {
 
 @media (max-width: 600px) {
     .hamburger { display: block; }
-
-    nav.nav {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-    }
-
+    nav.nav { display: none; flex-direction: column; width: 100%; }
     nav.nav.active { display: flex; }
-
     .product-categories { flex-direction: column; align-items: center; }
     .category-card { width: 70%; }
 }
@@ -132,12 +119,10 @@ main::before {
 </head>
 <body>
 
-<!-- ========================
-     HEADER
-     ======================== -->
+<!-- HEADER -->
 <header class="site-header">
     <div class="header-inner">
-        <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/">
+        <a href="index.html">
             <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
         </a>
 
@@ -153,32 +138,30 @@ main::before {
     </div>
 </header>
 
-<!-- ========================
-     MAIN CONTENT
-     ======================== -->
+<!-- MAIN CONTENT -->
 <main>
     <h1>Our Products</h1>
     <p>Explore our wide range of sustainable, organic products:</p>
 
     <div class="product-categories">
         <a href="garden-ornaments.html" class="category-card">
-            <img src="https://via.placeholder.com/80?text=Garden" alt="Garden Ornaments">
+            <img src="icons/garden.png" alt="Garden Ornaments">
             <h3>Garden Ornaments</h3>
         </a>
         <a href="soaps.html" class="category-card">
-            <img src="https://via.placeholder.com/80?text=Soap" alt="Soaps">
+            <img src="icons/soap.png" alt="Soaps">
             <h3>Soaps</h3>
         </a>
         <a href="arts-crafts.html" class="category-card">
-            <img src="https://via.placeholder.com/80?text=Crafts" alt="Arts & Crafts">
+            <img src="icons/crafts.png" alt="Arts & Crafts">
             <h3>Arts & Crafts</h3>
         </a>
         <a href="home-fragrance.html" class="category-card">
-            <img src="https://via.placeholder.com/80?text=Fragrance" alt="Home Fragrance">
+            <img src="icons/fragrance.png" alt="Home Fragrance">
             <h3>Home Fragrance</h3>
         </a>
         <a href="seedlings.html" class="category-card">
-            <img src="https://via.placeholder.com/80?text=Seedling" alt="Seedlings">
+            <img src="icons/seedling.png" alt="Seedlings">
             <h3>Seedlings</h3>
         </a>
     </div>
