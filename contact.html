@@ -23,7 +23,34 @@
         }
 
         main {
-            flex: 1; /* pushes footer to bottom */
+            flex: 1;
+            text-align: center;
+        }
+
+        /* ========================
+           CONTACT INFO STYLING
+           ======================== */
+        .contact-info {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
         }
 
         /* ========================
@@ -97,12 +124,26 @@
      ======================== -->
 <main>
     <h1>Contact Us</h1>
-    <p>
-        Email:
-        <a href="mailto:info@kurnalpiorganics.com">
-            info@kurnalpiorganics.com
-        </a>
-    </p>
+
+    <div class="contact-info">
+        <p><strong>Email:</strong><br>
+            <a href="mailto:info@kurnalpiorganics.com">
+                info@kurnalpiorganics.com
+            </a>
+        </p>
+
+        <p><strong>Phone:</strong><br>
+            Craig: <a href="tel:0615136127">061 513 6127</a><br>
+            Charne: <a href="tel:0609094622">060 909 4622</a>
+        </p>
+
+        <p><strong>Location:</strong><br>
+            Umtentweni<br>
+            Port Shepstone<br>
+            4235<br>
+            KZN
+        </p>
+    </div>
 </main>
 
 <!-- ========================
