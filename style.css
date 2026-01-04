@@ -12,9 +12,11 @@ header {
 
 .logo {
     .logo {
-    height: 8vw;
-    max-height: 120px;
-    min-height: 80px;
+   .logo {
+    height: 90px !important;
+    width: auto !important;
+}
+
 }
 
 }
