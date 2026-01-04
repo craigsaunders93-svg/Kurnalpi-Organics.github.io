@@ -6,6 +6,9 @@
 <title>Kurnalpi Organics</title>
 <link rel="stylesheet" href="style.css">
 <style>
+/* ========================
+   GLOBAL BACKGROUND
+   ======================== */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -17,8 +20,11 @@ body {
     color: white;
 }
 
+/* ========================
+   HEADER
+   ======================== */
 header, .site-header {
-    background-color: rgba(47, 93, 58, 0.85);
+    background-color: rgba(47, 93, 58, 0.85); /* semi-transparent header */
     padding: 15px 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
@@ -50,6 +56,9 @@ header, .site-header {
     }
 }
 
+/* ========================
+   NAVIGATION
+   ======================== */
 nav.nav {
     margin-top: 10px;
     display: flex;
@@ -68,6 +77,9 @@ nav a:hover {
     opacity: 0.8;
 }
 
+/* ========================
+   CART ICON
+   ======================== */
 .cart {
     font-size: 20px;
     background: rgba(0,0,0,0.3);
@@ -75,7 +87,9 @@ nav a:hover {
     border-radius: 5px;
 }
 
-/* HERO / MAIN */
+/* ========================
+   HERO / MAIN
+   ======================== */
 .hero {
     position: relative;
     min-height: 80vh;
@@ -98,7 +112,9 @@ nav a:hover {
     z-index: -1;
 }
 
-/* Ensure background shows on all pages */
+/* ========================
+   Ensure background shows on all pages
+   ======================== */
 main {
     position: relative;
     min-height: 60vh;
@@ -116,7 +132,9 @@ main::before {
     z-index: -1;
 }
 
-/* Hamburger menu */
+/* ========================
+   HAMBURGER MENU
+   ======================== */
 .hamburger {
     display: none;
     font-size: 28px;
@@ -147,16 +165,20 @@ main::before {
 </head>
 <body>
 
+<!-- ========================
+     HEADER
+     ======================== -->
 <header class="site-header">
     <div class="header-inner">
-        <a href="index.html">
+        <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/">
             <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
         </a>
 
+        <!-- Hamburger menu for small screens -->
         <div class="hamburger" id="hamburger">&#9776;</div>
 
         <nav class="nav" id="nav-menu">
-            <a href="index.html">Home</a>
+            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/">Home</a>
             <a href="about.html">About</a>
             <a href="products.html">Products</a>
             <a href="contact.html">Contact Us</a>
@@ -167,6 +189,9 @@ main::before {
     </div>
 </header>
 
+<!-- ========================
+     HERO / MAIN CONTENT
+     ======================== -->
 <main class="hero">
     <h1>Welcome to Kurnalpi Organics</h1>
     <p>Pure. Natural. Organic.</p>
