@@ -25,18 +25,10 @@ main::before {
     background: rgba(0,0,0,0.3);
     z-index: -1;
 }
-
+   
 /* ========================
-   PRODUCT CATEGORIES
+   PRODUCT CATEGORIES - INTERACTIVE HOVER
    ======================== */
-.product-categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 30px;
-}
-
 .category-card {
     display: flex;
     flex-direction: column;
@@ -47,7 +39,8 @@ main::before {
     padding: 20px;
     border-radius: 10px;
     width: 180px;
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* subtle shadow for depth */
 }
 
 .category-card img {
@@ -55,18 +48,32 @@ main::before {
     height: 80px;
     object-fit: contain;
     margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .category-card h3 {
     margin: 0;
     text-align: center;
     font-size: 16px;
+    transition: color 0.3s ease;
 }
 
+/* Hover effect */
 .category-card:hover {
-    transform: scale(1.05);
-    background: rgba(47, 93, 58, 1);
+    transform: translateY(-5px) scale(1.05); /* lift & slight zoom */
+    background: rgba(47, 93, 58, 1);          /* darker green */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);   /* stronger shadow */
 }
+
+.category-card:hover img {
+    transform: scale(1.1);                     /* subtle image zoom */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);  /* small shadow behind image */
+}
+
+.category-card:hover h3 {
+    color: #fffacd; /* light yellow text on hover for contrast */
+}
+
 
 /* ========================
    HAMBURGER MENU
