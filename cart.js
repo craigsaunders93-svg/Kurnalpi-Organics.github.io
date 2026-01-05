@@ -1,5 +1,5 @@
 // ========================
-// CART SCRIPT (FULL UPDATED)
+// CART SCRIPT
 // ========================
 
 // Get cart from localStorage
@@ -36,10 +36,8 @@ function addToCart(name, price, pack = "", quantity = 1) {
 
     let cart = getCart();
 
-    // Check if same product + pack already exists
-    const existingItem = cart.find(
-        item => item.name === name && item.pack === pack
-    );
+    // Check if same product with same pack already exists
+    const existingItem = cart.find(item => item.name === name && item.pack === pack);
 
     if (existingItem) {
         existingItem.quantity += quantity;
@@ -54,16 +52,15 @@ function addToCart(name, price, pack = "", quantity = 1) {
 
     saveCart(cart);
     updateCartDisplay();
-    alert(`${quantity} x ${name} added to cart!`);
+    alert(`Added ${quantity} x ${name} to cart!`);
 }
 
 // ========================
-// PRODUCT BUTTON HANDLING
+// HANDLE PRODUCT BUTTONS
 // ========================
 document.addEventListener("DOMContentLoaded", () => {
-
+    // Select all product cards
     document.querySelectorAll(".product-card").forEach(card => {
-
         const minusBtn = card.querySelector(".minus");
         const plusBtn = card.querySelector(".plus");
         const qtyDisplay = card.querySelector(".qty");
@@ -71,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let quantity = 1;
 
-        // Handle quantity buttons
+        // Quantity controls
         if (minusBtn && plusBtn && qtyDisplay) {
             minusBtn.addEventListener("click", () => {
                 if (quantity > 1) {
@@ -86,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Handle Add to Cart
+        // Add to cart button
         if (addBtn) {
             addBtn.addEventListener("click", () => {
                 const name = addBtn.dataset.name;
@@ -95,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 addToCart(name, price, pack, quantity);
 
-                // Reset quantity after adding
+                // Reset quantity to 1 after adding
                 quantity = 1;
                 if (qtyDisplay) qtyDisplay.textContent = 1;
             });
