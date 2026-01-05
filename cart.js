@@ -1,6 +1,5 @@
-<script>
 // ========================
-// CART SCRIPT (FULL)
+// CART SCRIPT (FULL UPDATED)
 // ========================
 
 // Get cart from localStorage
@@ -29,7 +28,7 @@ function updateCartDisplay() {
 }
 
 // Add item to cart
-function addToCart(name, price, pack, quantity = 1) {
+function addToCart(name, price, pack = "", quantity = 1) {
     if (!name || isNaN(price) || price < 0 || quantity < 1) {
         console.error("Invalid cart data");
         return;
@@ -37,6 +36,7 @@ function addToCart(name, price, pack, quantity = 1) {
 
     let cart = getCart();
 
+    // Check if same product + pack already exists
     const existingItem = cart.find(
         item => item.name === name && item.pack === pack
     );
@@ -54,6 +54,7 @@ function addToCart(name, price, pack, quantity = 1) {
 
     saveCart(cart);
     updateCartDisplay();
+    alert(`${quantity} x ${name} added to cart!`);
 }
 
 // ========================
@@ -61,7 +62,6 @@ function addToCart(name, price, pack, quantity = 1) {
 // ========================
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Quantity controls + Add to Cart buttons
     document.querySelectorAll(".product-card").forEach(card => {
 
         const minusBtn = card.querySelector(".minus");
@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let quantity = 1;
 
+        // Handle quantity buttons
         if (minusBtn && plusBtn && qtyDisplay) {
             minusBtn.addEventListener("click", () => {
                 if (quantity > 1) {
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+        // Handle Add to Cart
         if (addBtn) {
             addBtn.addEventListener("click", () => {
                 const name = addBtn.dataset.name;
@@ -93,14 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 addToCart(name, price, pack, quantity);
 
-                // Reset quantity after add
+                // Reset quantity after adding
                 quantity = 1;
                 if (qtyDisplay) qtyDisplay.textContent = 1;
             });
         }
     });
 
-    // Initialize cart total on page load
+    // Initialize cart total
     updateCartDisplay();
 });
-</script>
