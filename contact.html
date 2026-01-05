@@ -1,169 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Kurnalpi Organics</title>
 
-    <link rel="stylesheet" href="style.css">
+// ========================
+// CART SCRIPT
+// ========================
 
-    <style>
-        /* ========================
-           PAGE + FOOTER SUPPORT
-           ======================== */
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
+// Get cart from localStorage
+function getCart() {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+}
 
-        .page-wrapper {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+// Save cart to localStorage
+function saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
 
-        main {
-            flex: 1;
-            text-align: center;
-        }
+// Update cart total in header
+function updateCartDisplay() {
+    const cart = getCart();
+    let total = 0;
 
-        /* ========================
-           CONTACT INFO STYLING
-           ======================== */
-        .contact-info {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 25px;
-            border-radius: 10px;
-            max-width: 500px;
-            margin: 30px auto;
-        }
-
-        .contact-info p {
-            margin: 10px 0;
-            font-size: 16px;
-        }
-
-        .contact-info a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        /* ========================
-           HAMBURGER MENU STYLES
-           ======================== */
-        .hamburger {
-            display: none;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        @media (max-width: 600px) {
-            .hamburger {
-                display: block;
-            }
-
-            nav.nav {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-            }
-
-            nav.nav.active {
-                display: flex;
-            }
-        }
-
-        /* ========================
-           FOOTER
-           ======================== */
-        footer {
-            text-align: center;
-            padding: 15px 0;
-            background-color: rgba(47, 93, 58, 0.85);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="page-wrapper">
-
-<!-- ========================
-     HEADER
-     ======================== -->
-<header class="site-header">
-    <div class="header-inner">
-        <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/">
-            <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
-        </a>
-
-        <div class="hamburger" id="hamburger">&#9776;</div>
-
-        <nav class="nav" id="nav-menu">
-            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/">Home</a>
-            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/about.html">About</a>
-            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/products.html">Products</a>
-            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/contact.html">Contact Us</a>
-            <a href="https://craigsaunders93-svg.github.io/kurnalpi-organics.github.io/cart.html" class="cart">
-                🛒 <span id="cart-total">R0</span>
-            </a>
-        </nav>
-    </div>
-</header>
-
-<!-- ========================
-     MAIN CONTENT
-     ======================== -->
-<main>
-    <h1>Contact Us</h1>
-
-    <div class="contact-info">
-        <p><strong>Email:</strong><br>
-            <a href="mailto:info@kurnalpiorganics.com">
-                info@kurnalpiorganics.com
-            </a>
-        </p>
-
-        <p><strong>Phone:</strong><br>
-            Craig: <a href="tel:0615136127">061 513 6127</a><br>
-            Charne: <a href="tel:0609094622">060 909 4622</a>
-        </p>
-
-        <p><strong>Location:</strong><br>
-            Umtentweni<br>
-            Port Shepstone<br>
-            4235<br>
-            KZN
-        </p>
-    </div>
-</main>
-
-<!-- ========================
-     FOOTER
-     ======================== -->
-<footer>
-    &copy; 2026 Kurnalpi Organics. All rights reserved.
-</footer>
-
-</div>
-
-<script src="cart.js"></script>
-<script>
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('nav-menu');
-
-    hamburger.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
+    cart.forEach(item => {
+        total += item.price * item.quantity;
     });
-</script>
 
-</body>
-</html>
+    const cartTotalElement = document.getElementById("cart-total");
+    if (cartTotalElement) {
+        cartTotalElement.textContent = "R" + total.toFixed(2);
+    }
+}
+
+// Add item to cart
+function addToCart(name, price, pack = "", quantity = 1) {
+    if (!name || isNaN(price) || price < 0 || quantity < 1) {
+        console.error("Invalid cart data");
+        return;
+    }
+
+    let cart = getCart();
+
+    // Check if same product with same pack already exists
+    const existingItem = cart.find(item => item.name === name && item.pack === pack);
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            name: name,
+            price: price,
+            pack: pack,
+            quantity: quantity
+        });
+    }
+
+    saveCart(cart);
+    updateCartDisplay();
+    alert(`Added ${quantity} x ${name} to cart!`);
+}
+
+// Render cart page items (cart.html)
+function renderCartPage() {
+    const cart = getCart();
+    const container = document.getElementById("cart-container");
+    const totalDisplay = document.getElementById("cart-total-display");
+
+    if (!container || !totalDisplay) return;
+
+    container.innerHTML = "";
+
+    if (cart.length === 0) {
+        container.innerHTML = '<div class="empty-cart">Your cart is empty.</div>';
+        totalDisplay.textContent = "";
+        updateCartDisplay();
+        return;
+    }
+
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        const div = document.createElement("div");
+        div.className = "cart-item";
+
+        div.innerHTML = `
+            <img src="images/${item.name.toLowerCase().replace(/ /g, "-")}.png" alt="${item.name}">
+            <div class="cart-details">
+                <h3>${item.name}</h3>
+                <p>${item.pack}</p>
+                <div class="cart-quantity">
+                    <button class="minus">−</button>
+                    <span class="qty">${item.quantity}</span>
+                    <button class="plus">+</button>
+                    <button class="remove">Remove</button>
+                </div>
+            </div>
+            <div class="item-total">R${(item.price * item.quantity).toFixed(2)}</div>
+        `;
+
+        const minusBtn = div.querySelector(".minus");
+        const plusBtn = div.querySelector(".plus");
+        const removeBtn = div.querySelector(".remove");
+        const qtyDisplay = div.querySelector(".qty");
+
+        minusBtn.addEventListener("click", () => {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                cart.splice(index, 1);
+            }
+            saveCart(cart);
+            renderCartPage();
+            updateCartDisplay();
+        });
+
+        plusBtn.addEventListener("click", () => {
+            item.quantity++;
+            saveCart(cart);
+            renderCartPage();
+            updateCartDisplay();
+        });
+
+        removeBtn.addEventListener("click", () => {
+            cart.splice(index, 1);
+            saveCart(cart);
+            renderCartPage();
+            updateCartDisplay();
+        });
+
+        container.appendChild(div);
+    });
+
+    totalDisplay.textContent = "Total: R" + total.toFixed(2);
+    updateCartDisplay();
+}
+
+// ========================
+// HANDLE PRODUCT BUTTONS ON PRODUCTS PAGE
+// ========================
+document.addEventListener("DOMContentLoaded", () => {
+    // Product page quantity + Add to Cart
+    document.querySelectorAll(".product-card").forEach(card => {
+        const minusBtn = card.querySelector(".qty-btn.minus");
+        const plusBtn = card.querySelector(".qty-btn.plus");
+        const qtyDisplay = card.querySelector(".qty");
+        const addBtn = card.querySelector(".add-to-cart");
+
+        let quantity = 1;
+
+        if (minusBtn && plusBtn && qtyDisplay) {
+            minusBtn.addEventListener("click", () => {
+                if (quantity > 1) {
+                    quantity--;
+                    qtyDisplay.textContent = quantity;
+                }
+            });
+            plusBtn.addEventListener("click", () => {
+                quantity++;
+                qtyDisplay.textContent = quantity;
+            });
+        }
+
+        if (addBtn) {
+            addBtn.addEventListener("click", () => {
+                const name = addBtn.dataset.name;
+                const price = Number(addBtn.dataset.price);
+                const pack = addBtn.dataset.pack || "";
+
+                addToCart(name, price, pack, quantity);
+
+                // reset quantity
+                quantity = 1;
+                if (qtyDisplay) qtyDisplay.textContent = 1;
+            });
+        }
+    });
+
+    // Initialize header cart total
+    updateCartDisplay();
+
+    // If on cart page, render cart
+    if (document.getElementById("cart-container")) {
+        renderCartPage();
+    }
+});
