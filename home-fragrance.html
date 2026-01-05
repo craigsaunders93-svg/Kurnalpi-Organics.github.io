@@ -70,6 +70,12 @@ main::before {
     margin: 5px 0;
 }
 
+.pack-size {
+    font-size: 13px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
 .price {
     font-size: 18px;
     font-weight: bold;
@@ -143,67 +149,6 @@ footer {
             <img src="fragrance1.png" alt="Lavender Soy Candle">
             <h3>Lavender Soy Candle</h3>
             <p>Calming lavender candle made with natural soy wax.</p>
+            <p class="pack-size">Single candle (250g)</p>
             <div class="price">R150</div>
-            <button data-name="Lavender Soy Candle" data-price="150">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- PRODUCT 2 -->
-        <div class="product-card">
-            <img src="fragrance2.png" alt="Vanilla Inscence Sticks">
-            <h3>Vanilla Inscence Sticks</h3>
-            <p>Warm vanilla scent for continuous fragrance.</p>
-            <div class="price">R30</div>
-            <button data-name="Vanilla Inscence Sticks" data-price="30">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- PRODUCT 3 -->
-        <div class="product-card">
-            <img src="fragrance3.png" alt="Citrus Room Spray">
-            <h3>Citrus Room Spray</h3>
-            <p>Fresh citrus spray for instant room refresh.</p>
-            <div class="price">R95</div>
-            <button data-name="Citrus Room Spray" data-price="95">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- PRODUCT 4 -->
-        <div class="product-card">
-            <img src="fragrance4.png" alt="Eucalyptus Wax Melts">
-            <h3>Eucalyptus Wax Melts</h3>
-            <p>Invigorating eucalyptus scent for wax burners.</p>
-            <div class="price">R85</div>
-            <button data-name="Eucalyptus Wax Melts" data-price="85">
-                Add to Cart
-            </button>
-        </div>
-
-    </div>
-</main>
-
-<!-- ========================
-     FOOTER
-     ======================== -->
-<footer>
-    &copy; 2026 Kurnalpi Organics. All rights reserved.
-</footer>
-
-</div>
-
-<script src="cart.js"></script>
-<script>
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
-
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-});
-</script>
-
-</body>
-</html>
-
+            <button dat
