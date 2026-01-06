@@ -126,7 +126,7 @@ main::before {
 
 <main>
     <div class="products-container" id="products-container">
-        <!-- Products injected here -->
+        <!-- Products will be injected here -->
     </div>
 </main>
 
@@ -135,13 +135,14 @@ main::before {
 </footer>
 
 <script>
-// ======= SAMPLE PRODUCTS =======
+// ======= FULL PRODUCT LIST =======
 const products = [
-    {name:"Home Fragrance", price:120, image:"home-fragrance.jpg"},
-    {name:"Organic Honey", price:150, image:"honey.jpg"},
-    {name:"Aloe Vera Gel", price:120, image:"aloe.jpg"},
-    {name:"Herbal Tea", price:80, image:"tea.jpg"},
-    {name:"Natural Soap", price:60, image:"soap.jpg"}
+    {name: "Home Fragrance", price: 120, image: "home-fragrance.jpg"},
+    {name: "Garden Ornaments", price: 200, image: "garden-ornaments.jpg"},
+    {name: "Organic Honey", price: 150, image: "honey.jpg"},
+    {name: "Aloe Vera Gel", price: 120, image: "aloe.jpg"},
+    {name: "Herbal Tea", price: 80, image: "tea.jpg"},
+    {name: "Natural Soap", price: 60, image: "soap.jpg"}
 ];
 
 // ======= CART FUNCTIONS =======
@@ -163,9 +164,9 @@ function updateCartTotal() {
 
 // ======= ADD TO CART =======
 function addToCart(name, price, pack="", quantity=1, image="") {
-    if(!name || isNaN(price) || price<0 || quantity<1) return;
+    if(!name || isNaN(price) || price < 0 || quantity < 1) return;
     let cart = getCart();
-    const existing = cart.find(item => item.name===name && item.pack===pack);
+    const existing = cart.find(item => item.name === name && item.pack === pack);
     if(existing) existing.quantity += quantity;
     else cart.push({name, price, pack, quantity, image});
     saveCart(cart);
@@ -198,8 +199,8 @@ function renderProducts() {
         const plusBtn = card.querySelector(".plus");
         const addBtn = card.querySelector(".add-btn");
 
-        minusBtn.onclick = () => { if(parseInt(qtyInput.value)>1) qtyInput.value=parseInt(qtyInput.value)-1; };
-        plusBtn.onclick = () => { qtyInput.value=parseInt(qtyInput.value)+1; };
+        minusBtn.onclick = () => { if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1; };
+        plusBtn.onclick = () => { qtyInput.value = parseInt(qtyInput.value) + 1; };
         addBtn.onclick = () => { addToCart(prod.name, prod.price, "", parseInt(qtyInput.value), prod.image); };
     });
 }
@@ -210,5 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCartTotal();
 });
 </script>
+
 </body>
 </html>
