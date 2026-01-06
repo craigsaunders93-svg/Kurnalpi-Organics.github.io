@@ -140,7 +140,7 @@ function renderCategories() {
         const card = document.createElement("div");
         card.className = "category-card";
 
-        // Use an <a> for proper navigation to avoid double clicks
+        // Single-click <a> for navigation
         card.innerHTML = `
             <a href="${cat.page}" style="text-decoration:none; color:inherit;">
                 <img src="${cat.image}" alt="${cat.name}">
