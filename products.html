@@ -135,14 +135,14 @@ main::before {
 </footer>
 
 <script>
-// ======= FULL PRODUCT LIST =======
+// ======= FULL PRODUCT LIST WITH CATEGORIES =======
 const products = [
-    {name: "Home Fragrance", price: 120, image: "home-fragrance.jpg"},
-    {name: "Garden Ornaments", price: 200, image: "garden-ornaments.jpg"},
-    {name: "Organic Honey", price: 150, image: "honey.jpg"},
-    {name: "Aloe Vera Gel", price: 120, image: "aloe.jpg"},
-    {name: "Herbal Tea", price: 80, image: "tea.jpg"},
-    {name: "Natural Soap", price: 60, image: "soap.jpg"}
+    {name: "Home Fragrance", price: 120, image: "home-fragrance.jpg", category: "Home Fragrance"},
+    {name: "Garden Ornaments", price: 200, image: "garden-ornaments.jpg", category: "Garden Ornaments"},
+    {name: "Organic Honey", price: 150, image: "honey.jpg", category: "Organic Products"},
+    {name: "Aloe Vera Gel", price: 120, image: "aloe.jpg", category: "Organic Products"},
+    {name: "Herbal Tea", price: 80, image: "tea.jpg", category: "Organic Products"},
+    {name: "Natural Soap", price: 60, image: "soap.jpg", category: "Organic Products"}
 ];
 
 // ======= CART FUNCTIONS =======
@@ -159,7 +159,8 @@ function updateCartTotal() {
     const cart = getCart();
     let total = 0;
     cart.forEach(item => total += item.price * item.quantity);
-    document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
+    const cartTotalElement = document.getElementById("cart-total");
+    if(cartTotalElement) cartTotalElement.textContent = "R" + total.toFixed(2);
 }
 
 // ======= ADD TO CART =======
