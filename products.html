@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Category - Kurnalpi Organics</title>
+<title>Products - Kurnalpi Organics</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -46,22 +46,28 @@ main::before {
     z-index: -1;
 }
 
-.products-container {
+.categories-container {
     max-width: 1200px;
     margin: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
 
-.product-card {
+.category-card {
     background: rgba(47, 93, 58, 0.9);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.product-card img {
+.category-card:hover {
+    background: rgba(47, 93, 58, 1);
+}
+
+.category-card img {
     width: 150px;
     height: 150px;
     object-fit: cover;
@@ -69,41 +75,8 @@ main::before {
     margin-bottom: 10px;
 }
 
-.product-card h3 {
+.category-card h3 {
     margin: 10px 0 5px;
-}
-
-.qty-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0;
-    gap: 5px;
-}
-
-.qty-box button {
-    padding: 5px 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.qty-box input {
-    width: 50px;
-    text-align: center;
-}
-
-.add-btn {
-    margin-top: 10px;
-    padding: 10px 15px;
-    background: #ffd700;
-    color: black;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-.add-btn:hover {
-    background: #ffcc00;
 }
 </style>
 </head>
@@ -121,9 +94,9 @@ main::before {
 </header>
 
 <main>
-    <h1 id="category-title"></h1>
-    <div class="products-container" id="products-container">
-        <!-- Products injected here -->
+    <h1 style="text-align:center; margin-bottom:30px;">Our Product Categories</h1>
+    <div class="categories-container" id="categories-container">
+        <!-- Categories will be injected here -->
     </div>
 </main>
 
@@ -132,89 +105,35 @@ main::before {
 </footer>
 
 <script>
-// ======= FULL PRODUCT LIST WITH CATEGORIES =======
-const products = [
-    {name: "Home Fragrance 1", price: 120, image: "home-fragrance.jpg", category: "Home Fragrance"},
-    {name: "Garden Ornament 1", price: 200, image: "garden-ornaments.jpg", category: "Garden Ornaments"},
-    {name: "Seedling 1", price: 50, image: "seedling1.jpg", category: "Seedlings"},
-    {name: "Arts & Crafts Kit 1", price: 80, image: "arts-crafts.jpg", category: "Arts & Crafts"},
-    {name: "Garden Tool 1", price: 150, image: "garden.jpg", category: "Garden"},
-    // Add more products here as needed
+// ======= CATEGORY LIST =======
+const categories = [
+    {name: "Home Fragrance", image: "home-fragrance.jpg", link: "category.html?cat=Home%20Fragrance"},
+    {name: "Garden Ornaments", image: "garden-ornaments.jpg", link: "category.html?cat=Garden%20Ornaments"},
+    {name: "Seedlings", image: "seedlings.jpg", link: "category.html?cat=Seedlings"},
+    {name: "Arts & Crafts", image: "arts-crafts.jpg", link: "category.html?cat=Arts%20%26%20Crafts"},
+    {name: "Garden", image: "garden.jpg", link: "category.html?cat=Garden"}
 ];
 
-// ======= CART FUNCTIONS =======
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartTotal();
-}
-
-function updateCartTotal() {
-    const cart = getCart();
-    let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
-    const cartTotalElement = document.getElementById("cart-total");
-    if(cartTotalElement) cartTotalElement.textContent = "R" + total.toFixed(2);
-}
-
-// ======= ADD TO CART =======
-function addToCart(name, price, pack="", quantity=1, image="") {
-    if(!name || isNaN(price) || price < 0 || quantity < 1) return;
-    let cart = getCart();
-    const existing = cart.find(item => item.name === name && item.pack === pack);
-    if(existing) existing.quantity += quantity;
-    else cart.push({name, price, pack, quantity, image});
-    saveCart(cart);
-    alert(`Added ${quantity} x ${name} to cart`);
-}
-
-// ======= GET CATEGORY FROM URL =======
-const params = new URLSearchParams(window.location.search);
-const currentCategory = params.get('cat') || "";
-document.getElementById("category-title").textContent = currentCategory;
-
-// ======= RENDER PRODUCTS BY CATEGORY =======
-function renderProducts() {
-    const container = document.getElementById("products-container");
+function renderCategories() {
+    const container = document.getElementById("categories-container");
+    if(!container) return; // safety check
     container.innerHTML = "";
 
-    const filtered = products.filter(p => p.category === currentCategory);
-
-    filtered.forEach(prod => {
+    categories.forEach(cat => {
         const card = document.createElement("div");
-        card.className = "product-card";
+        card.className = "category-card";
         card.innerHTML = `
-            <img src="${prod.image}" alt="${prod.name}">
-            <h3>${prod.name}</h3>
-            <p>Price: R${prod.price.toFixed(2)}</p>
-            <div class="qty-box">
-                <button class="minus">−</button>
-                <input type="number" min="1" value="1">
-                <button class="plus">+</button>
-            </div>
-            <button class="add-btn">Add to Cart</button>
+            <img src="${cat.image}" alt="${cat.name}">
+            <h3>${cat.name}</h3>
         `;
+        card.onclick = () => { window.location.href = cat.link; };
         container.appendChild(card);
-
-        const qtyInput = card.querySelector("input");
-        const minusBtn = card.querySelector(".minus");
-        const plusBtn = card.querySelector(".plus");
-        const addBtn = card.querySelector(".add-btn");
-
-        minusBtn.onclick = () => { if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1; };
-        plusBtn.onclick = () => { qtyInput.value = parseInt(qtyInput.value) + 1; };
-        addBtn.onclick = () => { addToCart(prod.name, prod.price, "", parseInt(qtyInput.value), prod.image); };
     });
 }
 
 // ======= INITIALIZE =======
-document.addEventListener("DOMContentLoaded", () => {
-    renderProducts();
-    updateCartTotal();
-});
+document.addEventListener("DOMContentLoaded", renderCategories);
 </script>
+
 </body>
 </html>
