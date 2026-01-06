@@ -165,9 +165,9 @@ function renderProducts() {
 function addProductToCart(index) {
     const product = products[index];
     const qtyInput = document.getElementById(`qty-${index}`);
-    let quantity = parseInt(qtyInput.value, 10);
+    let quantity = parseInt(qtyInput.value, 10); // FIX: ensure number
 
-    if (isNaN(quantity) || quantity < 1) quantity = 1;
+    if (isNaN(quantity) || quantity < 1) quantity = 1; // default to 1 if invalid
 
     addToCart(product.name, product.price, product.pack, quantity, product.image);
 }
@@ -183,4 +183,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
