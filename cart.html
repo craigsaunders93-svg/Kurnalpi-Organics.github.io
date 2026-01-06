@@ -142,7 +142,6 @@ th {
 <main>
     <div class="cart-container">
         <h1>Your Shopping Cart</h1>
-
         <p id="cart-message"></p>
 
         <table>
@@ -173,25 +172,25 @@ th {
 </footer>
 
 <script>
-// ======== CART LOGIC ========
+// ======== CART FUNCTIONS ========
 function getCart() {
     return JSON.parse(localStorage.getItem("cart")) || [];
 }
 
 function saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartHeader();
 }
 
-function updateCartDisplay() {
+// Update the total in header
+function updateCartHeader() {
     const cart = getCart();
     let total = 0;
     cart.forEach(item => total += item.price * item.quantity);
-    const cartTotalElement = document.getElementById("cart-total");
-    if (cartTotalElement) {
-        cartTotalElement.textContent = "R" + total.toFixed(2);
-    }
+    document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
 }
 
+// Render cart items
 function renderCart() {
     const cart = getCart();
     const tbody = document.getElementById("cart-items");
@@ -203,7 +202,7 @@ function renderCart() {
     if (cart.length === 0) {
         message.textContent = "Your cart is empty.";
         document.getElementById("cart-grand-total").textContent = "Total: R0.00";
-        updateCartDisplay();
+        updateCartHeader();
         return;
     }
 
@@ -231,12 +230,12 @@ function renderCart() {
     });
 
     document.getElementById("cart-grand-total").textContent = "Total: R" + grandTotal.toFixed(2);
-    updateCartDisplay();
-
-    attachActions();
+    updateCartHeader();
+    attachCartActions();
 }
 
-function attachActions() {
+// Attach actions to buttons
+function attachCartActions() {
     const cart = getCart();
 
     // Quantity buttons
@@ -265,7 +264,7 @@ function attachActions() {
     });
 }
 
-// ======== CHECKOUT ========
+// Proceed to checkout
 document.getElementById("proceed-checkout").onclick = () => {
     if (getCart().length === 0) {
         alert("Your cart is empty!");
@@ -274,10 +273,8 @@ document.getElementById("proceed-checkout").onclick = () => {
     window.location.href = "checkout.html";
 };
 
-// ======== INITIALIZE ========
-document.addEventListener("DOMContentLoaded", () => {
-    renderCart();
-});
+// Initialize cart on page load
+document.addEventListener("DOMContentLoaded", renderCart);
 </script>
 
 </body>
