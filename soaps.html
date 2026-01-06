@@ -8,9 +8,6 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ========================
-   PAGE + FOOTER SUPPORT
-   ======================== */
 html, body {
     height: 100%;
     margin: 0;
@@ -36,10 +33,10 @@ main::before {
     z-index: -1;
 }
 
-/* ========================
-   PRODUCT GRID
-   ======================== */
-.products {
+/* PRODUCT GRID */
+.products-container {
+    max-width: 1200px;
+    margin: auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
@@ -76,23 +73,41 @@ main::before {
     margin: 10px 0;
 }
 
-.product-card button {
+/* QUANTITY */
+.qty-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.qty-box button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.qty-box input {
+    width: 50px;
+    text-align: center;
+}
+
+/* ADD BUTTON */
+.add-btn {
     background: #1f4d30;
     color: white;
     border: none;
     padding: 10px 16px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
 }
 
-.product-card button:hover {
+.add-btn:hover {
     background: #163823;
 }
 
-/* ========================
-   FOOTER
-   ======================== */
+/* FOOTER */
 footer {
     text-align: center;
     padding: 15px 0;
@@ -108,86 +123,29 @@ footer {
 
 <div class="page-wrapper">
 
-<!-- ========================
-     HEADER
-     ======================== -->
 <header class="site-header">
     <div class="header-inner">
         <a href="index.html">
             <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
         </a>
 
-        <div class="hamburger" id="hamburger">&#9776;</div>
-
-        <nav class="nav" id="nav-menu">
+        <nav class="nav">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="products.html">Products</a>
             <a href="contact.html">Contact Us</a>
-            <a href="cart.html" class="cart">🛒 <span id="cart-total">R0</span></a>
+            <a href="cart.html">🛒 <span id="cart-total">R0.00</span></a>
         </nav>
     </div>
 </header>
 
-<!-- ========================
-     MAIN CONTENT
-     ======================== -->
 <main>
-    <h1>Natural Soaps</h1>
-    <p>Handmade soaps using natural, skin-friendly ingredients.</p>
+    <h1 style="text-align:center;">Natural Soaps</h1>
+    <p style="text-align:center;">Handmade soaps using natural, skin-friendly ingredients.</p>
 
-    <div class="products">
-
-        <!-- SOAP 1 -->
-        <div class="product-card">
-            <img src="soap1.png" alt="Lavender Soap">
-            <h3>Lavender Soap</h3>
-            <p>Calming lavender soap for sensitive skin.</p>
-            <div class="price">R60</div>
-            <button data-name="Lavender Soap" data-price="60">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- SOAP 2 -->
-        <div class="product-card">
-            <img src="soap2.png" alt="Charcoal Soap">
-            <h3>Activated Charcoal Soap</h3>
-            <p>Deep-cleansing soap ideal for oily skin.</p>
-            <div class="price">R70</div>
-            <button data-name="Activated Charcoal Soap" data-price="70">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- SOAP 3 -->
-        <div class="product-card">
-            <img src="soap3.png" alt="Honey & Oat Soap">
-            <h3>Honey & Oat Soap</h3>
-            <p>Gentle exfoliating soap with natural honey.</p>
-            <div class="price">R65</div>
-            <button data-name="Honey & Oat Soap" data-price="65">
-                Add to Cart
-            </button>
-        </div>
-
-        <!-- SOAP 4 -->
-        <div class="product-card">
-            <img src="soap4.png" alt="Lemon Soap">
-            <h3>Lemon Fresh Soap</h3>
-            <p>Refreshing citrus soap for everyday use.</p>
-            <div class="price">R60</div>
-            <button data-name="Lemon Fresh Soap" data-price="60">
-                Add to Cart
-            </button>
-        </div>
-
-    </div>
+    <div class="products-container" id="products-container"></div>
 </main>
 
-<!-- ========================
-     FOOTER
-     ======================== -->
 <footer>
     &copy; 2026 Kurnalpi Organics. All rights reserved.
 </footer>
@@ -195,15 +153,81 @@ footer {
 </div>
 
 <script src="cart.js"></script>
-<script>
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
 
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-});
+<script>
+// ===== PRODUCTS =====
+const products = [
+    {
+        name: "Lavender Soap",
+        price: 60,
+        image: "soap1.png"
+    },
+    {
+        name: "Activated Charcoal Soap",
+        price: 70,
+        image: "soap2.png"
+    },
+    {
+        name: "Honey & Oat Soap",
+        price: 65,
+        image: "soap3.png"
+    },
+    {
+        name: "Lemon Fresh Soap",
+        price: 60,
+        image: "soap4.png"
+    }
+];
+
+// ===== RENDER PRODUCTS =====
+function renderProducts() {
+    const container = document.getElementById("products-container");
+    container.innerHTML = "";
+
+    products.forEach(prod => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+            <img src="${prod.image}" alt="${prod.name}">
+            <h3>${prod.name}</h3>
+            <p>${prod.description || ""}</p>
+            <div class="price">R${prod.price.toFixed(2)}</div>
+
+            <div class="qty-box">
+                <button class="minus">−</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
+            </div>
+
+            <button class="add-btn">Add to Cart</button>
+        `;
+
+        container.appendChild(card);
+
+        const qtyInput = card.querySelector("input");
+
+        card.querySelector(".minus").onclick = () => {
+            if (qtyInput.value > 1) qtyInput.value--;
+        };
+
+        card.querySelector(".plus").onclick = () => {
+            qtyInput.value++;
+        };
+
+        card.querySelector(".add-btn").onclick = () => {
+            addToCart(
+                prod.name,
+                prod.price,
+                parseInt(qtyInput.value),
+                prod.image
+            );
+        };
+    });
+}
+
+document.addEventListener("DOMContentLoaded", renderProducts);
 </script>
 
 </body>
 </html>
-
