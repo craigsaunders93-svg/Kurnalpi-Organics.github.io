@@ -1,6 +1,5 @@
-
 // ========================
-// CART.JS
+// CART.JS – Updated for all products
 // ========================
 
 // Get cart from localStorage
@@ -11,6 +10,7 @@ function getCart() {
 // Save cart to localStorage
 function saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
 }
 
 // Update cart total in header
@@ -19,9 +19,7 @@ function updateCartDisplay() {
     let total = 0;
     cart.forEach(item => total += item.price * item.quantity);
     const cartTotalElement = document.getElementById("cart-total");
-    if (cartTotalElement) {
-        cartTotalElement.textContent = "R" + total.toFixed(2);
-    }
+    if (cartTotalElement) cartTotalElement.textContent = "R" + total.toFixed(2);
 }
 
 // Add item to cart
@@ -32,6 +30,7 @@ function addToCart(name, price, pack = "", quantity = 1, image = "") {
     }
 
     let cart = getCart();
+    // Check if same item with same pack exists
     const existingItem = cart.find(item => item.name === name && item.pack === pack);
 
     if (existingItem) {
@@ -41,7 +40,6 @@ function addToCart(name, price, pack = "", quantity = 1, image = "") {
     }
 
     saveCart(cart);
-    updateCartDisplay();
     alert(`Added ${quantity} x ${name} to cart!`);
 }
 
@@ -61,7 +59,8 @@ function renderCartPage() {
 
     if (cart.length === 0) {
         if (cartMessage) cartMessage.textContent = "Your cart is currently empty.";
-        cartGrandTotal.textContent = "Total: R0";
+        cartGrandTotal.textContent = "Total: R0.00";
+        updateCartDisplay();
         return;
     }
 
@@ -75,14 +74,14 @@ function renderCartPage() {
         row.classList.add("cart-item");
         row.innerHTML = `
             <td>
-                <img src="${item.image}" alt="${item.name}" width="80" height="80">
+                <img src="${item.image || 'placeholder.png'}" alt="${item.name}" width="80" height="80">
                 <div>${item.name}</div>
             </td>
             <td>${item.pack || "-"}</td>
             <td>R${item.price.toFixed(2)}</td>
             <td>
-                <button class="qty-btn minus" data-index="${index}">−</button>
-                <span class="qty">${item.quantity}</span>
+                <button class="qty-btn minus" data-index="${index}" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+                <input type="number" class="qty-input" min="1" value="${item.quantity}" data-index="${index}">
                 <button class="qty-btn plus" data-index="${index}">+</button>
             </td>
             <td>R${subtotal.toFixed(2)}</td>
@@ -95,7 +94,6 @@ function renderCartPage() {
 
     cartGrandTotal.textContent = `Total: R${total.toFixed(2)}`;
     updateCartDisplay();
-
     attachCartActions();
 }
 
@@ -120,6 +118,18 @@ function attachCartActions() {
         };
     });
 
+    // Quantity input direct change
+    document.querySelectorAll(".qty-input").forEach(input => {
+        input.onchange = () => {
+            const index = parseInt(input.dataset.index);
+            let qty = parseInt(input.value);
+            if (isNaN(qty) || qty < 1) qty = 1;
+            cart[index].quantity = qty;
+            saveCart(cart);
+            renderCartPage();
+        };
+    });
+
     // Remove buttons
     document.querySelectorAll(".remove-btn").forEach(btn => {
         btn.onclick = () => {
@@ -132,8 +142,25 @@ function attachCartActions() {
 }
 
 // ========================
+// PROCEED TO CHECKOUT
+// ========================
+function attachCheckoutButton() {
+    const btn = document.getElementById("proceed-checkout");
+    if (!btn) return;
+
+    btn.onclick = () => {
+        if (getCart().length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+        window.location.href = "checkout.html";
+    };
+}
+
+// ========================
 // INITIALIZE ON PAGE LOAD
 // ========================
 document.addEventListener("DOMContentLoaded", () => {
     renderCartPage();
+    attachCheckoutButton();
 });
