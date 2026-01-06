@@ -16,6 +16,23 @@ body {
     color: white;
 }
 
+header, .site-header {
+    background-color: rgba(47, 93, 58, 0.85);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: 600;
+}
+
+header .nav a:hover { opacity: 0.8; }
+
 main {
     padding: 40px;
     position: relative;
@@ -97,14 +114,14 @@ main::before {
 
 <body>
 <header class="site-header">
-    <div class="header-inner">
-        <a href="index.html"><img src="logo.png" class="logo"></a>
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="products.html">Products</a>
-            <a href="cart.html">Cart 🛒 <span id="cart-total">R0.00</span></a>
-        </nav>
-    </div>
+    <a href="index.html"><img src="logo.png" class="logo" alt="Kurnalpi Organics"></a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="cart.html">Cart 🛒 <span id="cart-total">R0.00</span></a>
+    </nav>
 </header>
 
 <main>
@@ -144,12 +161,23 @@ function updateCartTotal() {
     document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
 }
 
+// ======= ADD TO CART =======
+function addToCart(name, price, pack="", quantity=1, image="") {
+    if(!name || isNaN(price) || price<0 || quantity<1) return;
+    let cart = getCart();
+    const existing = cart.find(item => item.name===name && item.pack===pack);
+    if(existing) existing.quantity += quantity;
+    else cart.push({name, price, pack, quantity, image});
+    saveCart(cart);
+    alert(`Added ${quantity} x ${name} to cart`);
+}
+
 // ======= RENDER PRODUCTS =======
 function renderProducts() {
     const container = document.getElementById("products-container");
     container.innerHTML = "";
 
-    products.forEach((prod, index) => {
+    products.forEach(prod => {
         const card = document.createElement("div");
         card.className = "product-card";
         card.innerHTML = `
@@ -165,31 +193,15 @@ function renderProducts() {
         `;
         container.appendChild(card);
 
-        // ======= SCOPE ELEMENTS FOR THIS CARD =======
         const qtyInput = card.querySelector("input");
         const minusBtn = card.querySelector(".minus");
         const plusBtn = card.querySelector(".plus");
         const addBtn = card.querySelector(".add-btn");
 
-        minusBtn.onclick = () => {
-            if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value)-1;
-        };
-        plusBtn.onclick = () => { qtyInput.value = parseInt(qtyInput.value)+1; };
-        addBtn.onclick = () => {
-            addToCart(prod.name, prod.price, "", parseInt(qtyInput.value), prod.image);
-        };
+        minusBtn.onclick = () => { if(parseInt(qtyInput.value)>1) qtyInput.value=parseInt(qtyInput.value)-1; };
+        plusBtn.onclick = () => { qtyInput.value=parseInt(qtyInput.value)+1; };
+        addBtn.onclick = () => { addToCart(prod.name, prod.price, "", parseInt(qtyInput.value), prod.image); };
     });
-}
-
-// ======= ADD TO CART =======
-function addToCart(name, price, pack="", quantity=1, image="") {
-    if(!name || isNaN(price) || price<0 || quantity<1) return;
-    let cart = getCart();
-    const existing = cart.find(item => item.name===name && item.pack===pack);
-    if(existing) existing.quantity += quantity;
-    else cart.push({name, price, pack, quantity, image});
-    saveCart(cart);
-    alert(`Added ${quantity} x ${name} to cart`);
 }
 
 // ======= INITIALIZE =======
