@@ -1,139 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart - Kurnalpi Organics</title>
+<link rel="stylesheet" href="style.css">
 
-// ========================
-// CART.JS
-// ========================
-
-// Get cart from localStorage
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    color: white;
 }
 
-// Save cart to localStorage
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-// Update cart total in header
-function updateCartDisplay() {
-    const cart = getCart();
-    let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
-    const cartTotalElement = document.getElementById("cart-total");
-    if (cartTotalElement) {
-        cartTotalElement.textContent = "R" + total.toFixed(2);
-    }
+main {
+    flex: 1;
+    padding: 40px;
+    position: relative;
 }
 
-// Add item to cart
-function addToCart(name, price, pack = "", quantity = 1, image = "") {
-    if (!name || isNaN(price) || price < 0 || quantity < 1) {
-        console.error("Invalid cart data");
-        return;
-    }
-
-    let cart = getCart();
-    const existingItem = cart.find(item => item.name === name && item.pack === pack);
-
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.push({ name, price, pack, quantity, image });
-    }
-
-    saveCart(cart);
-    updateCartDisplay();
-    alert(`Added ${quantity} x ${name} to cart!`);
+main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
 }
 
-// ========================
-// RENDER CART PAGE
-// ========================
-function renderCartPage() {
-    const cartItemsContainer = document.getElementById("cart-items");
-    const cartGrandTotal = document.getElementById("cart-grand-total");
-    const cartMessage = document.getElementById("cart-message");
-
-    if (!cartItemsContainer || !cartGrandTotal) return;
-
-    const cart = getCart();
-    cartItemsContainer.innerHTML = "";
-    let total = 0;
-
-    if (cart.length === 0) {
-        if (cartMessage) cartMessage.textContent = "Your cart is currently empty.";
-        cartGrandTotal.textContent = "Total: R0";
-        return;
-    }
-
-    if (cartMessage) cartMessage.textContent = "";
-
-    cart.forEach((item, index) => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-
-        const row = document.createElement("tr");
-        row.classList.add("cart-item");
-        row.innerHTML = `
-            <td>
-                <img src="${item.image}" alt="${item.name}" width="80" height="80">
-                <div>${item.name}</div>
-            </td>
-            <td>${item.pack || "-"}</td>
-            <td>R${item.price.toFixed(2)}</td>
-            <td>
-                <button class="qty-btn minus" data-index="${index}">−</button>
-                <span class="qty">${item.quantity}</span>
-                <button class="qty-btn plus" data-index="${index}">+</button>
-            </td>
-            <td>R${subtotal.toFixed(2)}</td>
-            <td>
-                <button class="remove-btn" data-index="${index}">Remove</button>
-            </td>
-        `;
-        cartItemsContainer.appendChild(row);
-    });
-
-    cartGrandTotal.textContent = `Total: R${total.toFixed(2)}`;
-    updateCartDisplay();
-
-    attachCartActions();
+.cart-container {
+    max-width: 1000px;
+    margin: auto;
+    background: rgba(47, 93, 58, 0.9);
+    padding: 30px;
+    border-radius: 10px;
 }
 
-// ========================
-// ATTACH BUTTON ACTIONS
-// ========================
-function attachCartActions() {
-    const cart = getCart();
-
-    // Quantity buttons
-    document.querySelectorAll(".qty-btn").forEach(btn => {
-        btn.onclick = () => {
-            const index = parseInt(btn.dataset.index);
-            if (btn.classList.contains("minus") && cart[index].quantity > 1) {
-                cart[index].quantity--;
-            }
-            if (btn.classList.contains("plus")) {
-                cart[index].quantity++;
-            }
-            saveCart(cart);
-            renderCartPage();
-        };
-    });
-
-    // Remove buttons
-    document.querySelectorAll(".remove-btn").forEach(btn => {
-        btn.onclick = () => {
-            const index = parseInt(btn.dataset.index);
-            cart.splice(index, 1);
-            saveCart(cart);
-            renderCartPage();
-        };
-    });
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-// ========================
-// INITIALIZE ON PAGE LOAD
-// ========================
-document.addEventListener("DOMContentLoaded", () => {
-    renderCartPage();
-});
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+th {
+    background: rgba(0,0,0,0.3);
+}
+
+.cart-item img {
+    display: block;
+    margin: auto;
+    border-radius: 6px;
+}
+
+.qty-btn {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.remove-btn {
+    background: #c0392b;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remove-btn:hover {
+    background: #e74c3c;
+}
+
+.cart-footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.checkout-btn {
+    margin-top: 15px;
+    background: #ffd700;
+    color: black;
+    padding: 12px 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.checkout-btn:hover {
+    background: #ffcc00;
+}
+
+#cart-message {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="index.html">
+            <img src="logo.png" class="logo" alt="Kurnalpi Organics">
+        </a>
+
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="products.html">Products</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="cart.html" class="cart">
+                🛒 <span id="cart-total">R0.00</span>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="cart-container">
+        <h1>Your Shopping Cart</h1>
+
+        <p id="cart-message"></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Pack</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                <!-- JS injects items here -->
+            </tbody>
+        </table>
+
+        <div class="cart-footer">
+            <h2 id="cart-grand-total">Total: R0.00</h2>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 Kurnalpi Organics. All rights reserved.
+</footer>
+
+</div>
+
+<script src="cart.js"></script>
+
+</body>
+</html>
