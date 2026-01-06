@@ -1,1 +1,212 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garden - Kurnalpi Organics</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    color: white;
+}
+
+header, .site-header {
+    background-color: rgba(47, 93, 58, 0.85);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: 600;
+}
+
+header .nav a:hover { opacity: 0.8; }
+
+main {
+    flex: 1;
+    padding: 40px;
+    position: relative;
+}
+
+/* ===== Products Grid ===== */
+.products-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.product-card {
+    background: rgba(47, 93, 58, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.product-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    margin: 10px 0 5px;
+}
+
+.product-card p {
+    margin: 5px 0;
+}
+
+.qty-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    gap: 5px;
+}
+
+.qty-box button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.qty-box input {
+    width: 50px;
+    text-align: center;
+}
+
+.add-btn {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #ffd700;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.add-btn:hover {
+    background: #ffcc00;
+}
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: rgba(47, 93, 58, 0.85);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html"><img src="logo.png" class="logo" alt="Kurnalpi Organics"></a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="cart.html">Cart 🛒 <span id="cart-total">R0.00</span></a>
+    </nav>
+</header>
+
+<main>
+    <h1 style="text-align:center; margin-bottom:30px;">Garden Products</h1>
+
+    <div class="products-container" id="products-container"></div>
+</main>
+
+<footer>
+    &copy; 2026 Kurnalpi Organics
+</footer>
+
+<script>
+// ======= PRODUCTS DATA =======
+const gardenProducts = [
+    {name: "Garden Fertilizer", price: 150, image:"fertilizer.jpg"},
+    {name: "Garden Tools Set", price: 250, image:"tools.jpg"}
+];
+
+// ======= CART FUNCTIONS =======
+function getCart() {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+}
+function saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartTotal();
+}
+function updateCartTotal() {
+    const cart = getCart();
+    let total = 0;
+    cart.forEach(item => total += item.price * item.quantity);
+    document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
+}
+function addToCart(name, price, quantity=1, image="") {
+    let cart = getCart();
+    const existing = cart.find(item => item.name === name);
+    if(existing) existing.quantity += quantity;
+    else cart.push({name, price, quantity, image});
+    saveCart(cart);
+    alert(`Added ${quantity} x ${name} to cart`);
+}
+
+// ======= RENDER PRODUCTS =======
+function renderProducts() {
+    const container = document.getElementById("products-container");
+    container.innerHTML = "";
+
+    gardenProducts.forEach(prod => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+            <img src="${prod.image}" alt="${prod.name}">
+            <h3>${prod.name}</h3>
+            <p>Price: R${prod.price.toFixed(2)}</p>
+            <div class="qty-box">
+                <button class="minus">−</button>
+                <input type="number" min="1" value="1">
+                <button class="plus">+</button>
+            </div>
+            <button class="add-btn">Add to Cart</button>
+        `;
+        container.appendChild(card);
+
+        const qtyInput = card.querySelector("input");
+        const minusBtn = card.querySelector(".minus");
+        const plusBtn = card.querySelector(".plus");
+        const addBtn = card.querySelector(".add-btn");
+
+        minusBtn.onclick = () => { if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value)-1; };
+        plusBtn.onclick = () => { qtyInput.value = parseInt(qtyInput.value)+1; };
+        addBtn.onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
+    });
+}
+
+// ======= INITIALIZE =======
+document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+    updateCartTotal();
+});
+</script>
+
+</body>
+</html>
