@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
+/* ======== PAGE STYLING ======== */
 body {
     font-family: Arial, sans-serif;
     background-image: url('background.jpg');
@@ -22,6 +23,23 @@ body {
     flex-direction: column;
 }
 
+header, .site-header {
+    background-color: rgba(47, 93, 58, 0.85);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: 600;
+}
+
+header .nav a:hover { opacity: 0.8; }
+
 main {
     flex: 1;
     padding: 40px;
@@ -36,6 +54,7 @@ main::before {
     z-index: -1;
 }
 
+/* ======== CART CONTAINER ======== */
 .cart-container {
     max-width: 1000px;
     margin: auto;
@@ -49,6 +68,13 @@ h1 {
     margin-bottom: 20px;
 }
 
+#cart-message {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 18px;
+}
+
+/* ======== CART TABLE ======== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -70,12 +96,32 @@ th {
     border-radius: 6px;
     width: 80px;
     height: 80px;
+    object-fit: cover;
 }
 
 .qty-btn {
     padding: 5px 10px;
     font-size: 16px;
     cursor: pointer;
+    border: none;
+    background: #1f4d30;
+    color: white;
+    border-radius: 4px;
+}
+
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    font-size: 16px;
+    padding: 4px;
+    margin: 0 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .remove-btn {
@@ -91,9 +137,15 @@ th {
     background: #e74c3c;
 }
 
+/* ======== CART FOOTER ======== */
 .cart-footer {
     margin-top: 20px;
     text-align: right;
+}
+
+#cart-grand-total {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .checkout-btn {
@@ -110,35 +162,29 @@ th {
 .checkout-btn:hover {
     background: #ffcc00;
 }
-
-#cart-message {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 18px;
-}
 </style>
 </head>
 
 <body>
 <div class="page-wrapper">
 
+<!-- ======== HEADER ======== -->
 <header class="site-header">
-    <div class="header-inner">
-        <a href="index.html">
-            <img src="logo.png" class="logo" alt="Kurnalpi Organics">
+    <a href="index.html">
+        <img src="logo.png" class="logo" alt="Kurnalpi Organics">
+    </a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="cart.html" class="cart">
+            🛒 <span id="cart-total">R0.00</span>
         </a>
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="products.html">Products</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="cart.html" class="cart">
-                🛒 <span id="cart-total">R0.00</span>
-            </a>
-        </nav>
-    </div>
+    </nav>
 </header>
 
+<!-- ======== MAIN ======== -->
 <main>
     <div class="cart-container">
         <h1>Your Shopping Cart</h1>
@@ -147,6 +193,7 @@ th {
         <table>
             <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Product</th>
                     <th>Pack</th>
                     <th>Price</th>
@@ -156,7 +203,7 @@ th {
                 </tr>
             </thead>
             <tbody id="cart-items">
-                <!-- Items will be injected here -->
+                <!-- Cart items will be injected here -->
             </tbody>
         </table>
 
@@ -171,111 +218,6 @@ th {
     &copy; 2026 Kurnalpi Organics. All rights reserved.
 </footer>
 
-<script>
-// ======== CART FUNCTIONS ========
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartHeader();
-}
-
-// Update the total in header
-function updateCartHeader() {
-    const cart = getCart();
-    let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
-    document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
-}
-
-// Render cart items
-function renderCart() {
-    const cart = getCart();
-    const tbody = document.getElementById("cart-items");
-    const message = document.getElementById("cart-message");
-    let grandTotal = 0;
-
-    tbody.innerHTML = "";
-
-    if (cart.length === 0) {
-        message.textContent = "Your cart is empty.";
-        document.getElementById("cart-grand-total").textContent = "Total: R0.00";
-        updateCartHeader();
-        return;
-    }
-
-    message.textContent = "";
-
-    cart.forEach((item, index) => {
-        const subtotal = item.price * item.quantity;
-        grandTotal += subtotal;
-
-        const row = document.createElement("tr");
-        row.classList.add("cart-item");
-        row.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.pack || "-"}</td>
-            <td>R${item.price.toFixed(2)}</td>
-            <td>
-                <button class="qty-btn minus" data-index="${index}">−</button>
-                <span>${item.quantity}</span>
-                <button class="qty-btn plus" data-index="${index}">+</button>
-            </td>
-            <td>R${subtotal.toFixed(2)}</td>
-            <td><button class="remove-btn" data-index="${index}">Remove</button></td>
-        `;
-        tbody.appendChild(row);
-    });
-
-    document.getElementById("cart-grand-total").textContent = "Total: R" + grandTotal.toFixed(2);
-    updateCartHeader();
-    attachCartActions();
-}
-
-// Attach actions to buttons
-function attachCartActions() {
-    const cart = getCart();
-
-    // Quantity buttons
-    document.querySelectorAll(".qty-btn").forEach(btn => {
-        btn.onclick = () => {
-            const index = parseInt(btn.dataset.index);
-            if (btn.classList.contains("minus") && cart[index].quantity > 1) {
-                cart[index].quantity--;
-            }
-            if (btn.classList.contains("plus")) {
-                cart[index].quantity++;
-            }
-            saveCart(cart);
-            renderCart();
-        };
-    });
-
-    // Remove buttons
-    document.querySelectorAll(".remove-btn").forEach(btn => {
-        btn.onclick = () => {
-            const index = parseInt(btn.dataset.index);
-            cart.splice(index, 1);
-            saveCart(cart);
-            renderCart();
-        };
-    });
-}
-
-// Proceed to checkout
-document.getElementById("proceed-checkout").onclick = () => {
-    if (getCart().length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-    window.location.href = "checkout.html";
-};
-
-// Initialize cart on page load
-document.addEventListener("DOMContentLoaded", renderCart);
-</script>
-
+</div>
 </body>
 </html>
