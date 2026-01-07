@@ -17,9 +17,19 @@ function saveCart(cart) {
 function updateCartDisplay() {
     const cart = getCart();
     let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
+
+    cart.forEach(item => {
+        const price = Number(item.price) || 0;
+        const qty = Number(item.quantity) || 1;
+        total += price * qty;
+    });
+
     const cartTotalElement = document.getElementById("cart-total");
-    if (cartTotalElement) cartTotalElement.textContent = "R" + total.toFixed(2);
+    if (cartTotalElement) {
+        cartTotalElement.textContent = "R" + total.toFixed(2);
+    }
+}
+
 }
 
 // Add item to cart
