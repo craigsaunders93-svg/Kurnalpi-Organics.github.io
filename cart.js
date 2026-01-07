@@ -14,7 +14,7 @@ function saveCart(cart) {
 }
 
 // Update cart total in header
-function updateCartDisplay() {
+function updateCartDisplay() 
     const cart = getCart();
     let total = 0;
 
