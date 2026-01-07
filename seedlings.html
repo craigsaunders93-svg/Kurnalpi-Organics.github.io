@@ -184,14 +184,6 @@ function updateCartTotal() {
     cart.forEach(item => total += item.price * item.quantity);
     document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
 }
-function addToCart(name, price, quantity=1, image="") {
-    let cart = getCart();
-    const existing = cart.find(item => item.name === name);
-    if(existing) existing.quantity += quantity;
-    else cart.push({name, price, quantity, image});
-    saveCart(cart);
-}
-
 // ======= RENDER PRODUCTS =======
 function renderProducts() {
     const container = document.getElementById("products-container");
