@@ -220,10 +220,14 @@ function renderProducts() {
         };
 
         card.querySelector(".add-btn").onclick = () => {
-            addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image);
-        };
-    });
-}
+    addToCart(
+        prod.name,
+        prod.price,
+        parseInt(qtyInput.value),
+        prod.image
+    );
+};
+
 
 document.addEventListener("DOMContentLoaded", renderProducts);
 </script>
