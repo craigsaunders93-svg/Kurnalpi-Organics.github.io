@@ -129,9 +129,7 @@ footer {
             <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
         </a>
 
-        <div class="hamburger" id="hamburger">&#9776;</div>
-
-        <nav class="nav" id="nav-menu">
+        <nav class="nav">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="products.html">Products</a>
@@ -142,14 +140,14 @@ footer {
 </header>
 
 <main>
-    <h1 style="text-align:center;">Garden Products</h1>
-    <p style="text-align:center;">Organic fertilizers, tools, and gardening essentials to grow your green space naturally.</p>
+    <h1 style="text-align:center;">Garden</h1>
+    <p style="text-align:center;">Organic fertilizers, tools, and gardening essentials to grow your green space naturally..</p>
 
     <div class="products-container" id="products-container"></div>
 </main>
 
 <footer>
-    &copy; 2026 Kurnalpi Organics
+    &copy; 2026 Kurnalpi Organics. All rights reserved.
 </footer>
 
 </div>
@@ -176,9 +174,11 @@ const gardenProducts = [
 // ===== RENDER PRODUCTS =====
 function renderProducts() {
     const container = document.getElementById("products-container");
+    if (!container) return;
+
     container.innerHTML = "";
 
-    gardenProducts.forEach(prod => {
+    seedlingsProducts.forEach(prod => {
         const card = document.createElement("div");
         card.className = "product-card";
 
@@ -186,41 +186,25 @@ function renderProducts() {
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
-            <div class="price">R${prod.price.toFixed(2)}</div>
-
+            <div class="price">R${prod.price}</div>
             <div class="qty-box">
                 <button class="minus">−</button>
-                <input type="number" value="1" min="1">
+                <input type="number" min="1" value="1">
                 <button class="plus">+</button>
             </div>
-
             <button class="add-btn">Add to Cart</button>
         `;
 
-        container.appendChild(card);
-
         const qtyInput = card.querySelector("input");
+        card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
+        card.querySelector(".plus").onclick = () => { qtyInput.value++; };
+        card.querySelector(".add-btn").onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
 
-        card.querySelector(".minus").onclick = () => {
-            if (qtyInput.value > 1) qtyInput.value--;
-        };
-
-        card.querySelector(".plus").onclick = () => {
-            qtyInput.value++;
-        };
-
-        card.querySelector(".add-btn").onclick = () => {
-            addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image);
-        };
+        container.appendChild(card);
     });
 }
 
 document.addEventListener("DOMContentLoaded", renderProducts);
-
-// ===== HAMBURGER MENU =====
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
-hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
 </script>
 
 </body>
