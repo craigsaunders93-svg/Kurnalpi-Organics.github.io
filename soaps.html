@@ -191,8 +191,11 @@ const soapProducts = [
 
 // ===== RENDER PRODUCTS =====
 function renderProducts() {
-    const container = document.getElementById("products-container");
-    container.innerHTML = "";
+    document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+    updateCartTotal();
+});
+
 
     products.forEach(prod => {
         const card = document.createElement("div");
