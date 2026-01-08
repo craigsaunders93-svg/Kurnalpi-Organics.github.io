@@ -149,43 +149,45 @@ footer {
 <script>
 // ======= APPAREL PRODUCTS =======
 const apparelProducts = [
-    {name: "Organic Cotton T-Shirt", price: 200, image: "tshirt.png"},
-    {name: "Eco Hat", price: 150, image: "hat.png"},
-    {name: "Reusable Tote Bag", price: 120, image: "tote.png"},
-    {name: "Organic Hoodie", price: 400, image: "hoodie.png"}
+    {name: "Organic Cotton T-Shirt", price: 200, image: "tshirt.png", description: "Soft, breathable cotton t-shirt made from organic fibers."},
+    {name: "Eco Hat", price: 150, image: "hat.png", description: "Sustainable hat made from eco-friendly materials."},
+    {name: "Reusable Tote Bag", price: 120, image: "tote.png", description: "Durable tote bag to carry your essentials sustainably."},
+    {name: "Organic Hoodie", price: 400, image: "hoodie.png", description: "Comfortable hoodie made from 100% organic cotton."}
 ];
 
 // ======= CART FUNCTIONS =======
 function getCart() {
     return JSON.parse(localStorage.getItem("cart")) || [];
 }
+
 function saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartTotal();
 }
+
 function updateCartTotal() {
     const cart = getCart();
     let total = 0;
     cart.forEach(item => total += item.price * item.quantity);
     document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
 }
+
 function addToCart(name, price, quantity=1, image="") {
     let cart = getCart();
     const existing = cart.find(item => item.name === name);
     if(existing) existing.quantity += quantity;
     else cart.push({name, price, quantity, image});
     saveCart(cart);
-
 }
 
-// ===== RENDER PRODUCTS =====
+// ======= RENDER PRODUCTS =======
 function renderProducts() {
     const container = document.getElementById("products-container");
     if (!container) return;
 
     container.innerHTML = "";
 
-    soapProducts.forEach(prod => {
+    apparelProducts.forEach(prod => {
         const card = document.createElement("div");
         card.className = "product-card";
 
@@ -211,27 +213,13 @@ function renderProducts() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", renderProducts);
-</script>
-
-        const qtyInput = card.querySelector("input");
-        const minusBtn = card.querySelector(".minus");
-        const plusBtn = card.querySelector(".plus");
-        const addBtn = card.querySelector(".add-btn");
-
-        minusBtn.onclick = () => { if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value)-1; };
-        plusBtn.onclick = () => { qtyInput.value = parseInt(qtyInput.value)+1; };
-        addBtn.onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
-    });
-}
-
 // ======= INITIALIZE =======
 document.addEventListener("DOMContentLoaded", () => {
     renderProducts();
     updateCartTotal();
 });
 
-// Hamburger menu
+// ======= HAMBURGER MENU =======
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('nav-menu');
 hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
@@ -239,4 +227,3 @@ hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
 
 </body>
 </html>
-
