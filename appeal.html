@@ -32,10 +32,13 @@ main::before {
     z-index: -1;
 }
 
-.products {
+/* PRODUCT GRID */
+.products-container {
+    max-width: 1200px;
+    margin: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
     margin-top: 30px;
 }
 
@@ -69,12 +72,13 @@ main::before {
     margin: 10px 0;
 }
 
+/* QUANTITY */
 .qty-box {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 6px;
     margin: 10px 0;
-    gap: 5px;
 }
 
 .qty-box button {
@@ -88,20 +92,21 @@ main::before {
     text-align: center;
 }
 
+/* ADD BUTTON */
 .add-btn {
-    margin-top: 10px;
-    padding: 10px 16px;
-    background: #ffd700;
-    color: black;
+    background: #1f4d30;
+    color: white;
     border: none;
-    cursor: pointer;
+    padding: 10px 16px;
     border-radius: 6px;
+    cursor: pointer;
 }
 
 .add-btn:hover {
-    background: #ffcc00;
+    background: #163823;
 }
 
+/* FOOTER */
 footer {
     text-align: center;
     padding: 15px 0;
@@ -120,23 +125,22 @@ footer {
 <header class="site-header">
     <div class="header-inner">
         <a href="index.html"><img src="logo.png" alt="Kurnalpi Organics Logo" class="logo"></a>
-        <div class="hamburger" id="hamburger">&#9776;</div>
-        <nav class="nav" id="nav-menu">
+        <nav class="nav">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="products.html">Products</a>
             <a href="contact.html">Contact Us</a>
-            <a href="cart.html" class="cart">🛒 <span id="cart-total">R0</span></a>
+            <a href="cart.html">🛒 <span id="cart-total">R0.00</span></a>
         </nav>
     </div>
 </header>
 
 <!-- MAIN CONTENT -->
 <main>
-    <h1>Clothing</h1>
-    <p>Organic hats, t-shirts and more for your lifestyle.</p>
+    <h1 style="text-align:center;">Clothing</h1>
+    <p style="text-align:center;">Organic hats, t-shirts, hoodies and more for your lifestyle.</p>
 
-    <div class="products" id="products-container"></div>
+    <div class="products-container" id="products-container"></div>
 </main>
 
 <!-- FOOTER -->
@@ -218,11 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderProducts();
     updateCartTotal();
 });
-
-// ======= HAMBURGER MENU =======
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
-hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
 </script>
 
 </body>
