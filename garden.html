@@ -62,6 +62,11 @@ main::before {
     margin: 10px 0 5px;
 }
 
+.product-card p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
 .price {
     font-size: 18px;
     font-weight: bold;
@@ -138,7 +143,7 @@ footer {
 
 <main>
     <h1 style="text-align:center;">Garden Products</h1>
-    <p style="text-align:center;">Organic fertilizers and garden tools for your green space.</p>
+    <p style="text-align:center;">Organic fertilizers, tools, and gardening essentials to grow your green space naturally.</p>
 
     <div class="products-container" id="products-container"></div>
 </main>
@@ -180,6 +185,7 @@ function renderProducts() {
         card.innerHTML = `
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
+            <p>${prod.description}</p>
             <div class="price">R${prod.price.toFixed(2)}</div>
 
             <div class="qty-box">
