@@ -178,18 +178,21 @@ function addToCart(name, price, quantity=1, image="") {
 
 }
 
-// ======= RENDER PRODUCTS =======
+// ===== RENDER PRODUCTS =====
 function renderProducts() {
     const container = document.getElementById("products-container");
+    if (!container) return;
+
     container.innerHTML = "";
 
-    apparelProducts.forEach(prod => {
+    soapProducts.forEach(prod => {
         const card = document.createElement("div");
         card.className = "product-card";
+
         card.innerHTML = `
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
-            <p>High-quality organic apparel for daily wear.</p>
+            <p>${prod.description}</p>
             <div class="price">R${prod.price}</div>
             <div class="qty-box">
                 <button class="minus">−</button>
@@ -198,7 +201,18 @@ function renderProducts() {
             </div>
             <button class="add-btn">Add to Cart</button>
         `;
+
+        const qtyInput = card.querySelector("input");
+        card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
+        card.querySelector(".plus").onclick = () => { qtyInput.value++; };
+        card.querySelector(".add-btn").onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
+
         container.appendChild(card);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", renderProducts);
+</script>
 
         const qtyInput = card.querySelector("input");
         const minusBtn = card.querySelector(".minus");
