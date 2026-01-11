@@ -1,31 +1,41 @@
 function checkoutWhatsApp() {
-    const message = buildMessage();  // Get the order details message
-    sendEmailNotification(message); // Send email to backend
-    window.open(`https://wa.me/27615136124?text=${message}`, "_blank");  // Open WhatsApp with the order message
-    completeOrder();
+  const message = buildMessage(); // Build order message
+
+  // Send email to backend (non-blocking)
+  sendEmailNotification(message);
+
+  // Open WhatsApp with encoded message
+  window.open(
+    `https://wa.me/27615136124?text=${encodeURIComponent(message)}`,
+    '_blank'
+  );
+
+  // Complete order (clear cart, redirect, etc.)
+  completeOrder();
 }
 
 // Send email notification to backend
 function sendEmailNotification(message) {
-    const orderDetails = {
-        message: message,
-        toEmail: 'kurnalpiorganics@gmail.com',  // Target email address
-    };
-
-    // Send request to backend
-    fetch('http://localhost:5000/send-email', { // Make sure to use the correct backend URL
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderDetails),
+  fetch('http://localhost:5000/send-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: message,
+      toEmail: 'kurnalpiorganics@gmail.com',
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+      return response.json();
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Email sent successfully:', data);
+    .then((data) => {
+      console.log('📧 Email sent successfully:', data);
     })
-    .catch(error => {
-        console.error('Error sending email:', error);
+    .catch((error) => {
+      console.error('❌ Error sending email:', error.message);
     });
 }
-
