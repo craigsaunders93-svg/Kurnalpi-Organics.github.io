@@ -7,36 +7,28 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// Nodemailer transport
+// Nodemailer transport using environment variables
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: kurnalpiorganics@gmail.com,       // your Gmail
-    pass: coxmjmdthxlwmbac        // your App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
-// Verify Gmail connection
 transporter.verify((error) => {
-  if (error) {
-    console.error('Gmail connection error:', error);
-  } else {
-    console.log('✅ Gmail is ready to send emails');
-  }
+  if (error) console.error('Gmail connection error:', error);
+  else console.log('✅ Gmail ready to send emails');
 });
 
-// Send email route
 app.post('/send-email', async (req, res) => {
   try {
     const { message, toEmail, orderRef, paymentMethod } = req.body;
-
-    if (!message || !toEmail || !orderRef) {
+    if (!message || !toEmail || !orderRef)
       return res.status(400).json({ error: 'Missing message, toEmail, or orderRef' });
-    }
 
     const mailOptions = {
       from: `"Kurnalpi Organics" <${process.env.EMAIL_USER}>`,
@@ -47,7 +39,6 @@ app.post('/send-email', async (req, res) => {
 
     await transporter.sendMail(mailOptions);
     console.log(`📧 Order email sent: ${orderRef}`);
-
     res.status(200).json({ success: true });
   } catch (error) {
     console.error('❌ Email error:', error);
@@ -55,6 +46,4 @@ app.post('/send-email', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Server running at http://localhost:${port}`);
-});
+app.listen(port, () => console.log(`🚀 Server running at http://localhost:${port}`));
