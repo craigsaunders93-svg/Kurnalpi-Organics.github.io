@@ -87,10 +87,12 @@ function completeOrder() {
 // Send email via backend
 async function sendEmailNotification(message, paymentMethod = "Online") {
     try {
-        const response = await fetch("http://kurnalpiorganics@gmail.com", { // <-- Use your server URL here
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+        const response = await fetch("http://localhost:5000/send-email", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ message, orderRef: ORDER_REF, paymentMethod, toEmail: "kurnalpiorganics@gmail.com" })
+});
+
                 message,
                 orderRef: ORDER_REF,
                 paymentMethod,
