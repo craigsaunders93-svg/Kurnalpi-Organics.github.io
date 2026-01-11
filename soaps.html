@@ -73,6 +73,13 @@ main::before {
     margin: 10px 0;
 }
 
+/* STOCK */
+.stock {
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
 /* QUANTITY */
 .qty-box {
     display: flex;
@@ -155,38 +162,13 @@ footer {
 <script src="cart.js"></script>
 
 <script>
-// ===== PRODUCTS =====
+// ===== PRODUCTS WITH STOCK =====
 const soapProducts = [
-    {
-        name: "Lavender Soap",
-        price: 60,
-        image: "lavender-soap.png",
-        description: "Handcrafted soap infused with calming lavender essential oil for gentle cleansing and relaxation."
-    },
-    {
-        name: "Lemon & Honey Soap",
-        price: 65,
-        image: "lemon-honey-soap.png",
-        description: "Refreshing citrus soap blended with natural honey to cleanse, nourish, and brighten skin."
-    },
-    {
-        name: "Charcoal Detox Soap",
-        price: 70,
-        image: "charcoal-soap.png",
-        description: "Activated charcoal soap that draws out impurities and leaves skin feeling clean and balanced."
-    },
-    {
-        name: "Aloe Vera Soap",
-        price: 65,
-        image: "aloe-soap.png",
-        description: "Soothing aloe vera soap ideal for sensitive skin, helping calm and moisturise naturally."
-    },
-    {
-        name: "Rosemary & Mint Soap",
-        price: 65,
-        image: "rosemary-mint-soap.png",
-        description: "Invigorating herbal soap with rosemary and mint for a refreshing, cooling cleanse."
-    }
+    { name: "Lavender Soap", price: 60, stock: 12, image: "lavender-soap.png", description: "Handcrafted soap infused with calming lavender essential oil for gentle cleansing and relaxation." },
+    { name: "Lemon & Honey Soap", price: 65, stock: 8, image: "lemon-honey-soap.png", description: "Refreshing citrus soap blended with natural honey to cleanse, nourish, and brighten skin." },
+    { name: "Charcoal Detox Soap", price: 70, stock: 15, image: "charcoal-soap.png", description: "Activated charcoal soap that draws out impurities and leaves skin feeling clean and balanced." },
+    { name: "Aloe Vera Soap", price: 65, stock: 10, image: "aloe-soap.png", description: "Soothing aloe vera soap ideal for sensitive skin, helping calm and moisturise naturally." },
+    { name: "Rosemary & Mint Soap", price: 65, stock: 9, image: "rosemary-mint-soap.png", description: "Invigorating herbal soap with rosemary and mint for a refreshing, cooling cleanse." }
 ];
 
 // ===== RENDER PRODUCTS =====
@@ -205,6 +187,7 @@ function renderProducts() {
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
             <div class="price">R${prod.price}</div>
+            <div class="stock">Stock: ${prod.stock}</div>
             <div class="qty-box">
                 <button class="minus">−</button>
                 <input type="number" min="1" value="1">
@@ -214,9 +197,21 @@ function renderProducts() {
         `;
 
         const qtyInput = card.querySelector("input");
+        const stockDiv = card.querySelector(".stock");
+
         card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
-        card.querySelector(".plus").onclick = () => { qtyInput.value++; };
-        card.querySelector(".add-btn").onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
+        card.querySelector(".plus").onclick = () => { 
+            if (qtyInput.value < prod.stock) qtyInput.value++;
+        };
+
+        card.querySelector(".add-btn").onclick = () => { 
+            const qty = parseInt(qtyInput.value);
+            if(qty > prod.stock){
+                alert(`Only ${prod.stock} in stock!`);
+                return;
+            }
+            addToCart(prod.name, prod.price, qty, prod.image);
+        };
 
         container.appendChild(card);
     });
