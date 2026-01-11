@@ -73,6 +73,13 @@ main::before {
     margin: 10px 0;
 }
 
+/* OPTIONS SELECT */
+.options-select {
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 14px;
+}
+
 /* QUANTITY */
 .qty-box {
     display: flex;
@@ -165,26 +172,25 @@ const seedlingsProducts = [
         { label: "25cm cutting", price: 55 }
     ],
     description: "Healthy organic Dragon Fruit cuttings ready to grow in your garden."
-}
-
-    {
-        name: "Basil Seedling",
-        price: 25,
-        image: "basil-seedling.png",
-        description: "Fragrant basil seedling perfect for fresh herbs and cooking."
-    },
-    {
-        name: "Lettuce Seedling",
-        price: 30,
-        image: "lettuce-seedling.png",
-        description: "Crisp and fresh lettuce seedling to start your salad garden."
-    },
-    {
-        name: "Spinach Seedling",
-        price: 28,
-        image: "spinach-seedling.png",
-        description: "Organic spinach seedlings for nutrient-rich leafy greens."
-    }
+  },
+  {
+    name: "Basil Seedling",
+    price: 25,
+    image: "basil-seedling.png",
+    description: "Fragrant basil seedling perfect for fresh herbs and cooking."
+  },
+  {
+    name: "Lettuce Seedling",
+    price: 30,
+    image: "lettuce-seedling.png",
+    description: "Crisp and fresh lettuce seedling to start your salad garden."
+  },
+  {
+    name: "Spinach Seedling",
+    price: 28,
+    image: "spinach-seedling.png",
+    description: "Organic spinach seedlings for nutrient-rich leafy greens."
+  }
 ];
 
 // ======= CART FUNCTIONS =======
@@ -203,7 +209,7 @@ function updateCartTotal() {
 }
 function addToCart(name, price, quantity=1, image="") {
     let cart = getCart();
-    const existing = cart.find(item => item.name === name);
+    const existing = cart.find(item => item.name === name && item.price === price);
     if(existing) existing.quantity += quantity;
     else cart.push({name, price, quantity, image});
     saveCart(cart);
@@ -220,11 +226,21 @@ function renderProducts() {
         const card = document.createElement("div");
         card.className = "product-card";
 
+        // Determine if product has options (like Dragon Fruit)
+        let optionsHTML = "";
+        let initialPrice = prod.price || (prod.options ? prod.options[0].price : 0);
+        if(prod.options) {
+            optionsHTML = `<select class="options-select">
+                ${prod.options.map(opt => `<option value="${opt.price}">${opt.label} - R${opt.price}</option>`).join("")}
+            </select>`;
+        }
+
         card.innerHTML = `
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
-            <div class="price">R${prod.price}</div>
+            <div class="price">R${initialPrice}</div>
+            ${optionsHTML}
             <div class="qty-box">
                 <button class="minus">−</button>
                 <input type="number" min="1" value="1">
@@ -234,9 +250,25 @@ function renderProducts() {
         `;
 
         const qtyInput = card.querySelector("input");
+        const priceDiv = card.querySelector(".price");
+        const select = card.querySelector(".options-select");
+
         card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
         card.querySelector(".plus").onclick = () => { qtyInput.value++; };
-        card.querySelector(".add-btn").onclick = () => { addToCart(prod.name, prod.price, parseInt(qtyInput.value), prod.image); };
+
+        // Update price if dropdown changes
+        if(select) {
+            select.onchange = () => {
+                priceDiv.textContent = "R" + select.value;
+            };
+        }
+
+        card.querySelector(".add-btn").onclick = () => {
+            const qty = parseInt(qtyInput.value);
+            const price = select ? parseInt(select.value) : prod.price;
+            const name = select ? `${prod.name} (${select.options[select.selectedIndex].text})` : prod.name;
+            addToCart(name, price, qty, prod.image);
+        };
 
         container.appendChild(card);
     });
