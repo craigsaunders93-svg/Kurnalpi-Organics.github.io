@@ -1,5 +1,5 @@
 // ========================
-// CART.JS – FIXED VERSION
+// CART.JS – STOCK-AWARE VERSION
 // ========================
 
 // Get cart from localStorage
@@ -30,8 +30,8 @@ function updateCartDisplay() {
     }
 }
 
-// Add item to cart
-function addToCart(name, price, quantity = 1, image = "", pack = "") {
+// Add item to cart with stock check
+function addToCart(name, price, quantity = 1, image = "", pack = "", stock = Infinity) {
     if (!name || isNaN(price) || price < 0 || quantity < 1) {
         console.error("Invalid cart data");
         return;
@@ -39,14 +39,18 @@ function addToCart(name, price, quantity = 1, image = "", pack = "") {
 
     let cart = getCart();
 
-    const existingItem = cart.find(
-        item => item.name === name && item.pack === pack
-    );
+    const existingItem = cart.find(item => item.name === name && item.pack === pack);
 
     if (existingItem) {
-        existingItem.quantity += quantity;
+        if (existingItem.quantity + quantity > stock) {
+            alert(`Only ${stock} items of "${name}" are available.`);
+            existingItem.quantity = stock;
+        } else {
+            existingItem.quantity += quantity;
+        }
     } else {
-        cart.push({ name, price, pack, quantity, image });
+        if (quantity > stock) quantity = stock;
+        cart.push({ name, price, pack, quantity, image, stock });
     }
 
     saveCart(cart);
@@ -89,7 +93,7 @@ function renderCartPage() {
             <td>R${item.price.toFixed(2)}</td>
             <td>
                 <button class="qty-btn minus" data-index="${index}" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
-                <input type="number" class="qty-input" min="1" value="${item.quantity}" data-index="${index}">
+                <input type="number" class="qty-input" min="1" value="${item.quantity}" data-index="${index}" max="${item.stock || ''}">
                 <button class="qty-btn plus" data-index="${index}">+</button>
             </td>
             <td>R${subtotal.toFixed(2)}</td>
@@ -114,12 +118,15 @@ function attachCartActions() {
     document.querySelectorAll(".qty-btn").forEach(btn => {
         btn.onclick = () => {
             const index = parseInt(btn.dataset.index);
+            const stock = cart[index].stock || Infinity;
+
             if (btn.classList.contains("minus") && cart[index].quantity > 1) {
                 cart[index].quantity--;
             }
-            if (btn.classList.contains("plus")) {
+            if (btn.classList.contains("plus") && cart[index].quantity < stock) {
                 cart[index].quantity++;
             }
+
             saveCart(cart);
             renderCartPage();
         };
@@ -129,7 +136,14 @@ function attachCartActions() {
         input.onchange = () => {
             const index = parseInt(input.dataset.index);
             let qty = parseInt(input.value);
+            const stock = cart[index].stock || Infinity;
+
             if (qty < 1 || isNaN(qty)) qty = 1;
+            if (qty > stock) {
+                alert(`Only ${stock} items available for "${cart[index].name}".`);
+                qty = stock;
+            }
+
             cart[index].quantity = qty;
             saveCart(cart);
             renderCartPage();
