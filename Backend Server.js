@@ -20,15 +20,27 @@ const transporter = nodemailer.createTransport({
 });
 
 // Send email route
-app.post('/send-email', (req, res) => {
+app.post('/send-email', async (req, res) => {
+  try {
     const { message, toEmail } = req.body;
 
     const mailOptions = {
-        from: 'your-email@gmail.com',  // Replace with your email
-        to: toEmail,                   // Send to the provided email
-        subject: 'New Order from Kurnalpi Organics',
-        text: message,                 // Email body containing the order details
+      from: '"Kurnalpi Organics" <your-company-email@gmail.com>',
+      to: toEmail,
+      subject: 'New Order from Kurnalpi Organics',
+      text: message,
     };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Email error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 
     // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
