@@ -168,8 +168,8 @@ const seedlingsProducts = [
     name: "Dragon Fruit",
     image: "dragon-fruit.png",
     options: [
-        { label: "15cm cutting", price: 35 },
-        { label: "25cm cutting", price: 55 }
+        { label: "15cm cutting", price: 35, stock: 50 },
+        { label: "25cm cutting", price: 55, stock: 50 }
     ],
     description: "Healthy organic Dragon Fruit cuttings ready to grow in your garden."
   },
@@ -177,21 +177,25 @@ const seedlingsProducts = [
     name: "Basil Seedling",
     price: 25,
     image: "basil-seedling.png",
+    stock: 20,
     description: "Fragrant basil seedling perfect for fresh herbs and cooking."
   },
   {
     name: "Lettuce Seedling",
     price: 30,
     image: "lettuce-seedling.png",
+    stock: 15,
     description: "Crisp and fresh lettuce seedling to start your salad garden."
   },
   {
     name: "Spinach Seedling",
     price: 28,
     image: "spinach-seedling.png",
+    stock: 12,
     description: "Organic spinach seedlings for nutrient-rich leafy greens."
   }
 ];
+
 
 // ======= CART FUNCTIONS =======
 function getCart() {
