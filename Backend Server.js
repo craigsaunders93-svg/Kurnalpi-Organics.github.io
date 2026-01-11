@@ -32,21 +32,21 @@ transporter.verify((error) => {
 // Send email route
 app.post('/send-email', async (req, res) => {
   try {
-    const { message, toEmail } = req.body;
+    const { message, toEmail, orderRef, paymentMethod } = req.body;
 
-    if (!message || !toEmail) {
-      return res.status(400).json({ error: 'Missing message or toEmail' });
+    if (!message || !toEmail || !orderRef) {
+      return res.status(400).json({ error: 'Missing message, toEmail, or orderRef' });
     }
 
     const mailOptions = {
       from: `"Kurnalpi Organics" <${process.env.EMAIL_USER}>`,
       to: toEmail,
-      subject: 'New Order from Kurnalpi Organics',
+      subject: `New Order: ${orderRef} (${paymentMethod || 'Online'})`,
       text: message,
     };
 
     await transporter.sendMail(mailOptions);
-    console.log('📧 Order email sent');
+    console.log(`📧 Order email sent: ${orderRef}`);
 
     res.status(200).json({ success: true });
   } catch (error) {
