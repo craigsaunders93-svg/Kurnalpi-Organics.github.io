@@ -3,172 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Us - Kurnalpi Organics</title>
+<title>Contact Us | Kurnalpi Organics</title>
+
 <link rel="stylesheet" href="style.css">
 
 <style>
 /* ========================
-   GLOBAL BACKGROUND
-   ======================== */
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-image: url('background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: white;
-}
-
-/* ========================
-   PAGE WRAPPER
-   ======================== */
-.page-wrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ========================
-   HEADER
-   ======================== */
-header, .site-header {
-    background-color: rgba(47, 93, 58, 0.85);
-    padding: 15px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-}
-
-.header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.logo {
-    height: 90px !important;
-    width: auto !important;
-}
-
-@media (max-width: 992px) {
-    .logo {
-        height: 70px !important;
-    }
-}
-
-@media (max-width: 600px) {
-    .logo {
-        height: 60px !important;
-        margin-bottom: 10px;
-    }
-}
-
-/* ========================
-   NAVIGATION
-   ======================== */
-nav.nav {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-nav a:hover {
-    opacity: 0.8;
-}
-
-/* ========================
-   CART ICON
-   ======================== */
-.cart {
-    font-size: 20px;
-    background: rgba(0,0,0,0.3);
-    padding: 5px 8px;
-    border-radius: 5px;
-}
-
-/* ========================
-   HERO / MAIN
-   ======================== */
-main {
-    flex: 1;
-    position: relative;
-    min-height: 60vh;
-    padding: 40px;
-}
-
-.hero {
-    position: relative;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
-}
-
-.hero::before,
-main::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    z-index: -1;
-}
-
-/* ========================
-   CONTACT SECTION
+   CONTACT PAGE CONTENT
    ======================== */
 .contact-section {
-    max-width: 700px;
+    max-width: 750px;
     margin: 0 auto;
-    background-color: rgba(47, 93, 58, 0.85);
-    padding: 30px;
-    border-radius: 10px;
+    background: rgba(47, 93, 58, 0.85);
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.35);
     text-align: center;
 }
 
 .contact-section h1 {
-    margin-bottom: 20px;
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
 .contact-section p {
-    font-size: 1.2rem;
-    margin: 15px 0;
+    font-size: 16px;
+    margin: 14px 0;
+    line-height: 1.6;
 }
 
 .contact-section a {
     color: white;
-    text-decoration: none;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .contact-section a:hover {
     text-decoration: underline;
 }
 
-/* Icons */
 .contact-icon {
-    margin-right: 10px;
-    font-size: 1.3rem;
+    margin-right: 8px;
+    font-size: 18px;
     vertical-align: middle;
 }
 
@@ -176,69 +52,26 @@ main::before {
    SOCIAL ICONS
    ======================== */
 .social-icons {
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
 .social-icons a {
     display: inline-block;
-    margin: 0 10px;
+    margin: 0 12px;
     width: 40px;
     height: 40px;
-    transition: transform 0.3s ease, fill 0.3s ease;
 }
 
 .social-icons svg {
-    fill: white;
     width: 100%;
     height: 100%;
+    fill: white;
     transition: transform 0.3s ease, fill 0.3s ease;
 }
 
 .social-icons a:hover svg {
-    fill: #ffd700; /* gold highlight */
-    transform: scale(1.2) rotate(-10deg);
-}
-
-/* ========================
-   FOOTER
-   ======================== */
-footer {
-    text-align: center;
-    padding: 15px 0;
-    background-color: rgba(47, 93, 58, 0.85);
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* ========================
-   HAMBURGER MENU
-   ======================== */
-.hamburger {
-    display: none;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    .hamburger {
-        display: block;
-    }
-
-    nav.nav {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    nav.nav.active {
-        display: flex;
-    }
-
-    .hero {
-        min-height: 60vh;
-        padding: 0 15px;
-    }
+    fill: #ffd700;
+    transform: scale(1.15);
 }
 </style>
 </head>
@@ -262,7 +95,7 @@ footer {
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="products.html">Products</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="contact.html">Contact</a>
             <a href="cart.html" class="cart">
                 🛒 <span id="cart-total">R0</span>
             </a>
@@ -275,31 +108,64 @@ footer {
      ======================== -->
 <main class="hero">
     <div class="contact-section">
-        <h1>Contact Us</h1>
-        <p><span class="contact-icon">📞</span> Phone: <a href="tel:+27615136124">+27 61 513 6124</a></p>
-       <p><span class="contact-icon">📞</span> Phone: <a href="tel:+27609094622">+27 60 909 4622</a></p>
-        <p><span class="contact-icon">✉️</span> Email: <a href="mailto:info@example.com">info@example.com</a></p>
-        <p><span class="contact-icon">📍</span> Address:  Rethman Drive, Umtentweni, South Africa</p>
-        <p><span class="contact-icon">⏰</span> Business Hours: Mon – Fri, 9:00 AM – 5:00 PM</p>
+        <h1>Get in Touch</h1>
+        <p>
+            We’d love to hear from you. Whether you have a question about our
+            products, custom orders, or wholesale enquiries, feel free to
+            contact us using the details below.
+        </p>
 
-        <!-- Social Media Icons (SVGs with hover animation) -->
+        <p>
+            <span class="contact-icon">📞</span>
+            Phone:
+            <a href="tel:+27615136124">+27 61 513 6124</a>
+        </p>
+
+        <p>
+            <span class="contact-icon">📞</span>
+            Phone:
+            <a href="tel:+27609094622">+27 60 909 4622</a>
+        </p>
+
+        <p>
+            <span class="contact-icon">✉️</span>
+            Email:
+            <a href="mailto:info@kurnalpiorganics.co.za">
+                info@kurnalpiorganics.co.za
+            </a>
+        </p>
+
+        <p>
+            <span class="contact-icon">📍</span>
+            Address:<br>
+            Rethman Drive, Umtentweni,<br>
+            KwaZulu-Natal, South Africa
+        </p>
+
+        <p>
+            <span class="contact-icon">⏰</span>
+            Business Hours:<br>
+            Monday – Friday | 9:00 AM – 5:00 PM
+        </p>
+
+        <!-- SOCIAL ICONS -->
         <div class="social-icons">
             <!-- WhatsApp -->
-            <a href="https://wa.me/27615136124" target="_blank" title="WhatsApp">
+            <a href="https://wa.me/27615136124" target="_blank" aria-label="WhatsApp">
                 <svg viewBox="0 0 32 32">
-                    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.832.739 5.473 2.14 7.785L0 32l8.528-2.111C10.565 31.122 13.209 32 16 32 24.837 32 32 24.837 32 16S24.837 0 16 0zm0 29.333c-2.405 0-4.739-.63-6.77-1.827l-.483-.271-5.073 1.254 1.353-4.959-.314-.506C2.35 19.067 1.333 17.08 1.333 16 1.333 8.297 8.297 1.333 16 1.333S30.667 8.297 30.667 16 23.703 29.333 16 29.333zM23.333 19.067c-.383-1.144-2.267-1.79-3.1-1.896-.832-.108-1.82-.121-2.65.121-.832.242-1.598.894-1.926 1.598-.328.704-.731 1.387-1.096 2.086-.364.698-.776.727-1.453.364-.677-.364-2.853-1.056-4.297-2.478-.932-.878-.978-1.482-.917-1.702.061-.221.333-.364.696-.606.364-.242.832-.61 1.182-.91.364-.303.485-.506.728-.844.242-.337.121-.63-.061-.91-.182-.273-1.498-3.607-2.052-4.92-.539-1.28-1.09-1.106-1.498-1.128-.364-.018-.784-.021-1.204-.021-.424 0-1.12.182-1.709.91-.587.728-2.24 2.19-2.24 5.345 0 3.157 2.295 6.207 2.615 6.634.303.42 5.707 8.713 13.697 8.713 5.793 0 8.223-3.827 9.16-6.61.933-2.786.933-5.17.653-5.634z"/>
+                    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.832.739 5.473 2.14 7.785L0 32l8.528-2.111C10.565 31.122 13.209 32 16 32 24.837 32 32 24.837 32 16S24.837 0 16 0z"/>
                 </svg>
             </a>
 
             <!-- Instagram -->
-            <a href="https://www.instagram.com/yourprofile" target="_blank" title="Instagram">
+            <a href="https://www.instagram.com/yourprofile" target="_blank" aria-label="Instagram">
                 <svg viewBox="0 0 32 32">
-                    <path d="M16 7.333a8.667 8.667 0 1 0 0 17.334 8.667 8.667 0 0 0 0-17.334zm0 14.334a5.667 5.667 0 1 1 0-11.334 5.667 5.667 0 0 1 0 11.334zm8-14.667a1.333 1.333 0 1 0 0 2.666 1.333 1.333 0 0 0 0-2.666zM32 16c0-8.837-7.163-16-16-16S0 7.163 0 16s7.163 16 16 16 16-7.163 16-16zm-4 0c0 6.627-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4s12 5.373 12 12z"/>
+                    <path d="M16 7.333a8.667 8.667 0 1 0 0 17.334 8.667 8.667 0 0 0 0-17.334z"/>
                 </svg>
             </a>
 
             <!-- Facebook -->
-            <a href="https://www.facebook.com/yourpage" target="_blank" title="Facebook">
+            <a href="https://www.facebook.com/yourpage" target="_blank" aria-label="Facebook">
                 <svg viewBox="0 0 32 32">
                     <path d="M29 0H3C1.343 0 0 1.343 0 3v26c0 1.657 1.343 3 3 3h14V20h-4v-5h4v-3c0-4.418 3.582-8 8-8h4v5h-4c-1.105 0-2 .895-2 2v3h6l-1 5h-5v12h6c1.657 0 3-1.343 3-3V3c0-1.657-1.343-3-3-3z"/>
                 </svg>
@@ -319,11 +185,11 @@ footer {
 
 <script src="cart.js"></script>
 <script>
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
+const hamburger = document.getElementById("hamburger");
+const navMenu = document.getElementById("nav-menu");
 
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+hamburger.addEventListener("click", () => {
+    navMenu.classList.toggle("active");
 });
 </script>
 
