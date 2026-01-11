@@ -1,22 +1,31 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // For handling cross-origin requests
+const cors = require('cors');
 
 const app = express();
-const port = 5000;  // The port your server will run on
+const port = 5000;
 
 // Middleware
-app.use(cors());  // Enable cross-origin requests
-app.use(bodyParser.json());  // Parse JSON bodies
+app.use(cors());
+app.use(bodyParser.json());
 
-// Setup Nodemailer transport
+// Nodemailer transport (Gmail + App Password)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'kurnalpiorganics@gmail.com',  // Replace with your Gmail address
-        pass: 'gmgs hylf cifq cotz',   // Replace with your Gmail password or App Password
-    }
+  service: 'gmail',
+  auth: {
+    user: 'kurnalpiorganics@gmail.com',
+    pass: 'YOUR_NEW_APP_PASSWORD_NO_SPACES',
+  },
+});
+
+// Verify Gmail connection
+transporter.verify((error) => {
+  if (error) {
+    console.error('Gmail connection error:', error);
+  } else {
+    console.log('✅ Gmail is ready to send emails');
+  }
 });
 
 // Send email route
@@ -24,37 +33,28 @@ app.post('/send-email', async (req, res) => {
   try {
     const { message, toEmail } = req.body;
 
+    if (!message || !toEmail) {
+      return res.status(400).json({ error: 'Missing message or toEmail' });
+    }
+
     const mailOptions = {
-      from: '"Kurnalpi Organics" <your-company-email@gmail.com>',
+      from: '"Kurnalpi Organics" <kurnalpiorganics@gmail.com>',
       to: toEmail,
       subject: 'New Order from Kurnalpi Organics',
       text: message,
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent:', info.response);
+    console.log('📧 Email sent:', info.response);
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Email error:', error);
+    console.error('❌ Email error:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error);
-            return res.status(500).json({ error: 'Email not sent' });
-        }
-        console.log('Email sent: ' + info.response);
-        res.status(200).json({ message: 'Email sent successfully', info });
-    });
-});
-
-// Start the server
+// Start server
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  console.log(`🚀 Server running at http://localhost:${port}`);
 });
-
