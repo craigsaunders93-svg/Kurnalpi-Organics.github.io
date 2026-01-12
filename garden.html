@@ -162,7 +162,7 @@ footer {
 <script src="cart.js"></script>
 
 <script>
-// ===== PRODUCTS WITH STOCK =====
+<script>
 // ===== PRODUCTS WITH STOCK =====
 const gardenProducts = [
   {
@@ -184,8 +184,7 @@ const gardenProducts = [
   }
 ];
 
-
-// ===== RENDER PRODUCTS WITH STOCK =====
+// ===== RENDER PRODUCTS =====
 function renderProducts() {
     const container = document.getElementById("products-container");
     if (!container) return;
@@ -196,15 +195,29 @@ function renderProducts() {
         const card = document.createElement("div");
         card.className = "product-card";
 
+        // Check if product has multiple options
+        let optionsHTML = '';
+        let defaultPrice = prod.price || (prod.options ? prod.options[0].price : 0);
+        let defaultStock = prod.stock || (prod.options ? prod.options[0].stock : 0);
+
+        if (prod.options && prod.options.length > 0) {
+            optionsHTML = `
+                <select class="size-select">
+                    ${prod.options.map((opt, i) => `<option value="${i}">${opt.label}</option>`).join('')}
+                </select>
+            `;
+        }
+
         card.innerHTML = `
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
-            <div class="price">R${prod.price}</div>
-            <div class="stock">Stock: ${prod.stock}</div>
+            ${optionsHTML}
+            <div class="price">R${defaultPrice}</div>
+            <div class="stock">Stock: ${defaultStock}</div>
             <div class="qty-box">
                 <button class="minus">−</button>
-                <input type="number" min="1" max="${prod.stock}" value="1">
+                <input type="number" min="1" max="${defaultStock}" value="1">
                 <button class="plus">+</button>
             </div>
             <button class="add-btn">Add to Cart</button>
@@ -214,20 +227,48 @@ function renderProducts() {
         const minusBtn = card.querySelector(".minus");
         const plusBtn = card.querySelector(".plus");
         const addBtn = card.querySelector(".add-btn");
+        const priceEl = card.querySelector(".price");
+        const stockEl = card.querySelector(".stock");
+        const sizeSelect = card.querySelector(".size-select");
 
+        // Handle quantity buttons
         minusBtn.onclick = () => {
             if(parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
         };
         plusBtn.onclick = () => {
-            if(parseInt(qtyInput.value) < prod.stock) qtyInput.value = parseInt(qtyInput.value) + 1;
+            if(parseInt(qtyInput.value) < defaultStock) qtyInput.value = parseInt(qtyInput.value) + 1;
         };
+
+        // Handle size change
+        if (sizeSelect) {
+            sizeSelect.onchange = () => {
+                const selected = prod.options[sizeSelect.value];
+                priceEl.textContent = `R${selected.price}`;
+                stockEl.textContent = `Stock: ${selected.stock}`;
+                qtyInput.max = selected.stock;
+                if (parseInt(qtyInput.value) > selected.stock) qtyInput.value = selected.stock;
+            };
+        }
+
+        // Add to cart
         addBtn.onclick = () => {
+            let priceToUse = defaultPrice;
+            let stockToUse = defaultStock;
+            let labelToUse = prod.name;
+
+            if (sizeSelect) {
+                const selected = prod.options[sizeSelect.value];
+                priceToUse = selected.price;
+                stockToUse = selected.stock;
+                labelToUse = `${prod.name} (${selected.label})`;
+            }
+
             const qty = parseInt(qtyInput.value);
-            if(qty > prod.stock){
-                alert(`Only ${prod.stock} in stock!`);
+            if(qty > stockToUse){
+                alert(`Only ${stockToUse} in stock!`);
                 return;
             }
-            addToCart(prod.name, prod.price, qty, prod.image);
+            addToCart(labelToUse, priceToUse, qty, prod.image);
         };
 
         container.appendChild(card);
