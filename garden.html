@@ -200,10 +200,12 @@ function renderProducts() {
         const card = document.createElement("div");
         card.className = "product-card";
 
-        let optionsHTML = "";
+        // Determine initial price and stock
         let initialPrice = prod.price || (prod.options ? prod.options[0].price : 0);
         let initialStock = prod.stock || (prod.options ? prod.options[0].stock : 0);
 
+        // Dropdown for options with price displayed
+        let optionsHTML = "";
         if(prod.options) {
             optionsHTML = `<select class="options-select">
                 ${prod.options.map(opt => `<option value="${opt.price}" data-stock="${opt.stock}">${opt.label} - R${opt.price}</option>`).join("")}
@@ -241,13 +243,16 @@ function renderProducts() {
             if(qtyInput.value < currentStock) qtyInput.value++; 
         };
 
-        // Update price & stock on dropdown change
+        // Update price & stock when dropdown changes
         if(select) {
             select.onchange = () => {
-                priceDiv.textContent = "R" + select.value;
-                currentStock = parseInt(select.options[select.selectedIndex].dataset.stock);
+                const selectedPrice = parseInt(select.value);
+                const selectedStock = parseInt(select.options[select.selectedIndex].dataset.stock);
+                priceDiv.textContent = "R" + selectedPrice;
+                currentStock = selectedStock;
                 stockDiv.textContent = "Stock: " + currentStock;
-                if(qtyInput.value > currentStock) qtyInput.value = currentStock;
+                qtyInput.max = currentStock;
+                if (qtyInput.value > currentStock) qtyInput.value = currentStock;
             };
         }
 
@@ -270,6 +275,7 @@ function renderProducts() {
 // ===== INITIALIZE =====
 document.addEventListener("DOMContentLoaded", renderProducts);
 </script>
+
 
 </body>
 </html>
