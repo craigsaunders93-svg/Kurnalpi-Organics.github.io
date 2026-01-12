@@ -73,6 +73,12 @@ main::before {
     margin: 10px 0;
 }
 
+.options-select {
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 14px;
+}
+
 .stock {
     font-size: 14px;
     font-weight: bold;
@@ -162,15 +168,15 @@ footer {
 <script src="cart.js"></script>
 
 <script>
-// ===== PRODUCTS WITH STOCK =====
+// ======= PRODUCTS =======
 const gardenProducts = [
   {
     name: "Envirozyme Fertilizer",
     image: "enviro.png",
     options: [
-      { label: "1L", price: 150, stock: 50 },
-      { label: "5L", price: 650, stock: 50 },
-      { label: "25L", price: 1450, stock: 50 }
+        { label: "1L", price: 150, stock: 50 },
+        { label: "5L", price: 650, stock: 50 },
+        { label: "25L", price: 1450, stock: 50 }
     ],
     description: "Nutrient-rich organic fertilizer that promotes healthy micro organisms in plant growth and vibrant blooms."
   },
@@ -194,89 +200,67 @@ function renderProducts() {
         const card = document.createElement("div");
         card.className = "product-card";
 
-        // Determine default price and stock
-        let defaultPrice, defaultStock, hasOptions = false;
-        if (prod.options && prod.options.length > 0) {
-            defaultPrice = prod.options[0].price;
-            defaultStock = prod.options[0].stock;
-            hasOptions = true;
-        } else {
-            defaultPrice = prod.price || 0;
-            defaultStock = prod.stock || 0;
+        let optionsHTML = "";
+        let initialPrice = prod.price || (prod.options ? prod.options[0].price : 0);
+        let initialStock = prod.stock || (prod.options ? prod.options[0].stock : 0);
+
+        if(prod.options) {
+            optionsHTML = `<select class="options-select">
+                ${prod.options.map(opt => `<option value="${opt.price}" data-stock="${opt.stock}">${opt.label} - R${opt.price}</option>`).join("")}
+            </select>`;
+            initialStock = prod.options[0].stock;
         }
 
-        // Dropdown for products with multiple options
-        let optionsHTML = '';
-        if (hasOptions) {
-            optionsHTML = `
-                <select class="size-select">
-                    ${prod.options.map((opt, i) => `<option value="${i}">${opt.label}</option>`).join('')}
-                </select>
-            `;
-        }
-
-        // Build product card
         card.innerHTML = `
             <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
-            <div class="price">R${defaultPrice}</div>
+            <div class="price">R${initialPrice}</div>
             ${optionsHTML}
-            <div class="stock">Stock: ${defaultStock}</div>
+            <p class="stock">Stock: ${initialStock}</p>
             <div class="qty-box">
                 <button class="minus">−</button>
-                <input type="number" min="1" max="${defaultStock}" value="1">
+                <input type="number" min="1" value="1">
                 <button class="plus">+</button>
             </div>
             <button class="add-btn">Add to Cart</button>
         `;
 
         const qtyInput = card.querySelector("input");
-        const minusBtn = card.querySelector(".minus");
-        const plusBtn = card.querySelector(".plus");
-        const addBtn = card.querySelector(".add-btn");
-        const priceEl = card.querySelector(".price");
-        const stockEl = card.querySelector(".stock");
-        const sizeSelect = card.querySelector(".size-select");
+        const priceDiv = card.querySelector(".price");
+        const stockDiv = card.querySelector(".stock");
+        const select = card.querySelector(".options-select");
 
-        let currentPrice = defaultPrice;
-        let currentStock = defaultStock;
+        let currentStock = initialStock;
 
         // Quantity buttons
-        minusBtn.onclick = () => {
-            if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+        card.querySelector(".minus").onclick = () => { 
+            if(qtyInput.value > 1) qtyInput.value--; 
         };
-        plusBtn.onclick = () => {
-            if (parseInt(qtyInput.value) < currentStock) qtyInput.value = parseInt(qtyInput.value) + 1;
+        card.querySelector(".plus").onclick = () => { 
+            if(qtyInput.value < currentStock) qtyInput.value++; 
         };
 
-        // Update price & stock when dropdown changes
-        if (sizeSelect) {
-            sizeSelect.onchange = () => {
-                const selected = prod.options[sizeSelect.value];
-                currentPrice = selected.price;
-                currentStock = selected.stock;
-                priceEl.textContent = `R${currentPrice}`;
-                stockEl.textContent = `Stock: ${currentStock}`;
-                qtyInput.max = currentStock;
-                if (parseInt(qtyInput.value) > currentStock) qtyInput.value = currentStock;
+        // Update price & stock on dropdown change
+        if(select) {
+            select.onchange = () => {
+                priceDiv.textContent = "R" + select.value;
+                currentStock = parseInt(select.options[select.selectedIndex].dataset.stock);
+                stockDiv.textContent = "Stock: " + currentStock;
+                if(qtyInput.value > currentStock) qtyInput.value = currentStock;
             };
         }
 
         // Add to cart
-        addBtn.onclick = () => {
+        card.querySelector(".add-btn").onclick = () => {
             const qty = parseInt(qtyInput.value);
-            if (qty > currentStock) {
-                alert(`Only ${currentStock} in stock!`);
+            if(qty > currentStock) {
+                alert("Not enough stock available.");
                 return;
             }
-
-            let label = prod.name;
-            if (sizeSelect) {
-                label += ` (${prod.options[sizeSelect.value].label})`;
-            }
-
-            addToCart(label, currentPrice, qty, prod.image);
+            const price = select ? parseInt(select.value) : prod.price;
+            const name = select ? `${prod.name} (${select.options[select.selectedIndex].text})` : prod.name;
+            addToCart(name, price, qty, prod.image);
         };
 
         container.appendChild(card);
