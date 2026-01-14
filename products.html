@@ -12,141 +12,57 @@
 /* ========================
    GLOBAL
 ========================= */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: url('background.jpg') center/cover no-repeat fixed;
-    color: white;
-}
-
-.page-wrapper {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: Arial, sans-serif; background: url('background.jpg') center/cover no-repeat fixed; color: white; }
+.page-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ========================
    HEADER
 ========================= */
-header.site-header {
-    background-color: rgba(47, 93, 58, 0.85);
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    height: 100px;
-    width: auto;
-}
-
-nav.nav {
-    display: flex;
-    gap: 20px;
-}
-
-nav.nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-nav.nav a:hover {
-    opacity: 0.8;
-}
+header.site-header { background-color: rgba(47,93,58,0.85); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+.logo { height: 100px; width: auto; }
+nav.nav { display: flex; gap: 20px; }
+nav.nav a { color: white; text-decoration: none; font-weight: 600; }
+nav.nav a:hover { opacity: 0.8; }
 
 /* ========================
    MAIN CONTENT
 ========================= */
-main {
-    flex: 1;
-    padding: 40px 20px;
-    text-align: center;
-}
+main { flex: 1; padding: 40px 20px; text-align: center; }
 
 /* ========================
    CATEGORY GRID
 ========================= */
-.categories-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 200px);
-    justify-content: center;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 30px auto 0;
-}
-
+.categories-container { display: grid; grid-template-columns: repeat(auto-fit, 200px); justify-content: center; gap: 20px; max-width: 1200px; margin: 30px auto 0; }
+.category-card { background: rgba(47,93,58,0.85); padding: 15px; border-radius: 10px; text-align: center; text-decoration: none; color: white; box-shadow: 0 6px 12px rgba(0,0,0,0.3); transition: transform 0.2s, background 0.2s; }
+.category-card:hover { transform: scale(1.05); background: rgba(47,93,58,1); }
+.category-card img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; }
+.category-card h3 { font-size: 16px; margin: 0; }
 
 /* ========================
-   CATEGORY CARD
+   PRODUCTS GRID
 ========================= */
-.category-card {
-    background: rgba(47, 93, 58, 0.85);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transition: transform 0.2s, background 0.2s;
-}
-
-.category-card:hover {
-    transform: scale(1.05);
-    background: rgba(47, 93, 58, 1);
-}
-
-.category-card img {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    margin-bottom: 10px;
-}
-
-.category-card h3 {
-    font-size: 16px;
-    margin: 0;
-}
+#products-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto 0; }
+.product-card { background: rgba(47,93,58,0.85); padding: 15px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+.product-card img { width: 150px; height: 150px; object-fit: contain; margin-bottom: 10px; }
+.price { font-weight: bold; margin: 5px 0; }
+.qty-box { display: flex; justify-content: center; align-items: center; margin: 10px 0; }
+.qty-box input { width: 50px; text-align: center; margin: 0 5px; border-radius: 5px; }
+.qty-box button { padding: 2px 8px; border:none; border-radius: 5px; cursor:pointer; }
+.add-btn { background-color: #2F5D3A; border:none; color:white; padding: 8px 12px; border-radius:5px; cursor:pointer; transition:0.2s; }
+.add-btn:hover { background-color: #1f3b27; }
 
 /* ========================
    FOOTER
 ========================= */
-footer {
-    text-align: center;
-    padding: 15px 0;
-    background-color: rgba(47, 93, 58, 0.85);
-    font-weight: bold;
-    font-size: 14px;
-}
-
-footer a {
-    color: white;
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
+footer { text-align: center; padding: 15px 0; background-color: rgba(47, 93, 58, 0.85); font-weight: bold; font-size: 14px; }
+footer a { color:white; text-decoration:none; }
+footer a:hover { text-decoration: underline; }
 
 /* ========================
    RESPONSIVE
 ========================= */
-@media (max-width: 600px) {
-    .categories-container {
-        grid-template-columns: repeat(auto-fit, 150px);
-        gap: 12px;
-    }
-
-    .category-card img {
-        width: 100px;
-        height: 100px;
-    }
+@media (max-width:600px){.categories-container{grid-template-columns:repeat(auto-fit,150px);gap:12px}.category-card img{width:100px;height:100px}}
 </style>
 </head>
 
@@ -169,6 +85,9 @@ footer a:hover {
 <main>
     <h1 style="margin-bottom:30px;">Our Product Categories</h1>
     <div class="categories-container" id="categories-container"></div>
+
+    <h2 style="margin:40px 0 20px;">Seedlings</h2>
+    <div id="products-container"></div>
 </main>
 
 <!-- FOOTER -->
@@ -184,13 +103,13 @@ footer a:hover {
 // PRODUCT CATEGORIES
 // ========================
 const categories = [
-    {name: "Soaps", image: "soap.png", page: "soaps.html"},
-    {name: "Seedlings", image: "seedling.png", page: "seedlings.html"},
-    {name: "Garden", image: "garden.png", page: "garden.html"},
-    {name: "Home Fragrance", image: "fragrance.png", page: "home-fragrance.html"},
-    {name: "Garden Ornaments", image: "ornaments.png", page: "garden-ornaments.html"},
-    {name: "Arts & Crafts", image: "crafts.png", page: "arts-crafts.html"},
-    {name: "Clothing", image: "appeal.png", page: "appeal.html"}
+    {name:"Soaps", image:"soap.png", page:"soaps.html"},
+    {name:"Seedlings", image:"seedling.png", page:"seedlings.html"},
+    {name:"Garden", image:"garden.png", page:"garden.html"},
+    {name:"Home Fragrance", image:"fragrance.png", page:"home-fragrance.html"},
+    {name:"Garden Ornaments", image:"ornaments.png", page:"garden-ornaments.html"},
+    {name:"Arts & Crafts", image:"crafts.png", page:"arts-crafts.html"},
+    {name:"Clothing", image:"appeal.png", page:"appeal.html"}
 ];
 
 // ========================
@@ -199,37 +118,127 @@ const categories = [
 function renderCategories() {
     const container = document.getElementById("categories-container");
     container.innerHTML = "";
-
     categories.forEach(cat => {
         const cardLink = document.createElement("a");
         cardLink.href = cat.page;
         cardLink.className = "category-card";
-
-        cardLink.innerHTML = `
-            <img src="${cat.image}" alt="${cat.name}">
-            <h3>${cat.name}</h3>
-        `;
-
+        cardLink.innerHTML = `<img src="${cat.image}" alt="${cat.name}"><h3>${cat.name}</h3>`;
         container.appendChild(cardLink);
     });
 }
 
 // ========================
-// CART TOTAL
+// SEEDLINGS PRODUCTS
 // ========================
+const seedlingsProducts = [
+    {name:"Dragon Fruit", images:["dragonfruit.png","dragonfruit1.png"], options:[{label:"15cm cutting", price:35, stock:50},{label:"25cm cutting", price:55, stock:50}], description:"Healthy organic Dragon Fruit cuttings ready to grow."},
+    {name:"Basil Seedling", price:25, image:"basil-seedling.png", stock:20, description:"Fragrant basil seedling perfect for fresh herbs."},
+    {name:"Lettuce Seedling", price:30, image:"lettuce-seedling.png", stock:15, description:"Crisp and fresh lettuce seedling."},
+    {name:"Spinach Seedling", price:28, image:"spinach-seedling.png", stock:12, description:"Organic spinach seedlings for leafy greens."}
+];
+
+// ========================
+// CART FUNCTIONS
+// ========================
+function getCart() { return JSON.parse(localStorage.getItem("cart"))||[]; }
+function saveCart(cart) { localStorage.setItem("cart",JSON.stringify(cart)); updateCartTotal(); }
 function updateCartTotal() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
-    const cartTotalElement = document.getElementById("cart-total");
-    if (cartTotalElement) cartTotalElement.textContent = "R" + total.toFixed(2);
+    const cart = getCart();
+    let total = 0; cart.forEach(i=>total+=i.price*i.quantity);
+    document.getElementById("cart-total").textContent="R"+total.toFixed(2);
+}
+function addToCart(name, price, quantity=1, image="") {
+    const cart = getCart();
+    const existing = cart.find(i=>i.name===name && i.price===price);
+    if(existing) existing.quantity+=quantity;
+    else cart.push({name, price, quantity, image});
+    saveCart(cart);
 }
 
 // ========================
-// INITIALIZE
+// RENDER PRODUCTS
 // ========================
-document.addEventListener("DOMContentLoaded", () => {
+function renderProducts() {
+    const container = document.getElementById("products-container");
+    container.innerHTML="";
+    seedlingsProducts.forEach((prod)=>{
+        const card=document.createElement("div");
+        card.className="product-card";
+
+        let initialPrice = prod.price || prod.options?.[0].price || 0;
+        let currentStock = prod.stock || prod.options?.[0].stock || 0;
+
+        const optionsHTML = prod.options ? `<select class="options-select">
+            ${prod.options.map(opt=>`<option value="${opt.price}" data-stock="${opt.stock}">${opt.label} - R${opt.price}</option>`).join("")}
+        </select>` : "";
+
+        const imageHTML = prod.images ? `<div class="slider">
+            <button class="prev">❮</button>
+            <img class="product-image" src="${prod.images[0]}" data-img-index="0">
+            <button class="next">❯</button>
+        </div>` : `<img src="${prod.image}" alt="${prod.name}">`;
+
+        card.innerHTML=`${imageHTML}<h3>${prod.name}</h3><p>${prod.description}</p>
+            <div class="price">R${initialPrice}</div>
+            ${optionsHTML}
+            <p class="stock">Stock: ${currentStock}</p>
+            <div class="qty-box">
+                <button class="minus">−</button>
+                <input type="number" min="1" value="1">
+                <button class="plus">+</button>
+            </div>
+            <button class="add-btn">Add to Cart</button>`;
+
+        const qtyInput = card.querySelector("input");
+        const priceDiv = card.querySelector(".price");
+        const stockDiv = card.querySelector(".stock");
+        const select = card.querySelector(".options-select");
+
+        card.querySelector(".minus").onclick = ()=>{if(qtyInput.value>1) qtyInput.value--;}
+        card.querySelector(".plus").onclick = ()=>{if(qtyInput.value<currentStock) qtyInput.value++;}
+        if(select){
+            select.onchange = ()=>{
+                priceDiv.textContent="R"+select.value;
+                currentStock=parseInt(select.options[select.selectedIndex].dataset.stock);
+                stockDiv.textContent="Stock: "+currentStock;
+                if(qtyInput.value>currentStock) qtyInput.value=currentStock;
+            }
+        }
+        card.querySelector(".add-btn").onclick = ()=>{
+            const qty=parseInt(qtyInput.value);
+            const price=select?parseInt(select.value):prod.price;
+            const name=select?`${prod.name} (${select.options[select.selectedIndex].text})`:prod.name;
+            if(qty>currentStock){alert("Not enough stock available.");return;}
+            addToCart(name, price, qty, prod.image || prod.images?.[0]);
+            alert(`${name} added to cart!`);
+        }
+
+        container.appendChild(card);
+    });
+}
+
+// ========================
+// IMAGE SLIDER
+// ========================
+document.addEventListener("click",e=>{
+    if(!e.target.classList.contains("prev")&&!e.target.classList.contains("next")) return;
+    const slider=e.target.closest(".slider");
+    const img=slider.querySelector(".product-image");
+    const card=e.target.closest(".product-card");
+    const productName=card.querySelector("h3").textContent;
+    const product=seedlingsProducts.find(p=>productName.startsWith(p.name));
+    let index=parseInt(img.dataset.imgIndex);
+    index=e.target.classList.contains("next")?(index+1)%product.images.length:(index-1+product.images.length)%product.images.length;
+    img.src=product.images[index];
+    img.dataset.imgIndex=index;
+});
+
+// ========================
+// INIT
+// ========================
+document.addEventListener("DOMContentLoaded",()=>{
     renderCategories();
+    renderProducts();
     updateCartTotal();
 });
 </script>
