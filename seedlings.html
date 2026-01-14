@@ -1,185 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seedlings - Kurnalpi Organics</title>
-
-<link rel="stylesheet" href="style.css">
-
-<style>
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-.page-wrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1;
-    position: relative;
-    padding: 40px;
-}
-
-main::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: -1;
-}
-
-/* PRODUCT GRID */
-.products-container {
-    max-width: 1200px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
-}
-
-.product-card {
-    background: rgba(47, 93, 58, 0.85);
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-}
-
-.product-card img {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    margin-bottom: 10px;
-}
-
-.product-card h3 {
-    margin: 10px 0 5px;
-}
-
-.product-card p {
-    font-size: 14px;
-    margin: 5px 0;
-}
-
-.price {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-/* OPTIONS SELECT */
-.options-select {
-    margin: 10px 0;
-    padding: 5px;
-    font-size: 14px;
-}
-
-/* QUANTITY */
-.qty-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    margin: 10px 0;
-}
-
-.qty-box button {
-    padding: 5px 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.qty-box input {
-    width: 50px;
-    text-align: center;
-}
-
-/* ADD BUTTON */
-.add-btn {
-    background: #1f4d30;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.add-btn:hover {
-    background: #163823;
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 15px 0;
-    background-color: rgba(47, 93, 58, 0.85);
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-}
-</style>
-</head>
-
-<body>
-
-<div class="page-wrapper">
-
-<header class="site-header">
-    <div class="header-inner">
-        <a href="index.html">
-            <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
-        </a>
-
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="products.html">Products</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="cart.html">🛒 <span id="cart-total">R0.00</span></a>
-        </nav>
-    </div>
-</header>
-
-<main>
-    <h1 style="text-align:center;">Seedlings</h1>
-    <p style="text-align:center;">Sow today for a greener tomorrow.</p>
-
-    <div class="products-container" id="products-container"></div>
-</main>
-
-<footer>
-    &copy; 2026 Kurnalpi Organics. All rights reserved.
-</footer>
-
-</div>
-
-<script src="cart.js"></script>
-
 <script>
-// ======= PRODUCTS =======
-const seedlingsProducts = [
-  // ======= PRODUCTS =======
+/* ================= PRODUCTS ================= */
+
 const seedlingsProducts = [
   {
     name: "Dragon Fruit",
-    images: [
-      "dragonfruit.png",
-      "dragonfruit1.png"
-    ],
+    images: ["dragonfruit.png", "dragonfruit1.png"],
     options: [
       { label: "15cm cutting", price: 35, stock: 50 },
       { label: "25cm cutting", price: 55, stock: 50 }
     ],
     description: "Healthy organic Dragon Fruit cuttings ready to grow in your garden."
-  }
-];
-
+  },
   {
     name: "Basil Seedling",
     price: 25,
@@ -203,128 +34,146 @@ const seedlingsProducts = [
   }
 ];
 
-     <!-- Product Card -->
-    <div class="product-card">
+/* ================= CART FUNCTIONS ================= */
+
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartTotal();
+}
+
+function updateCartTotal() {
+  const cart = getCart();
+  let total = 0;
+  cart.forEach(item => total += item.price * item.quantity);
+  document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
+}
+
+function addToCart(name, price, quantity = 1, image = "") {
+  const cart = getCart();
+  const existing = cart.find(item => item.name === name && item.price === price);
+  if (existing) existing.quantity += quantity;
+  else cart.push({ name, price, quantity, image });
+  saveCart(cart);
+}
+
+/* ================= RENDER PRODUCTS ================= */
+
+function renderProducts() {
+  const container = document.getElementById("products-container");
+  container.innerHTML = "";
+
+  seedlingsProducts.forEach((prod, index) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    let initialPrice = prod.price || prod.options?.[0].price || 0;
+    let currentStock = prod.stock || prod.options?.[0].stock || 0;
+
+    const optionsHTML = prod.options ? `
+      <select class="options-select">
+        ${prod.options.map(opt =>
+          `<option value="${opt.price}" data-stock="${opt.stock}">
+            ${opt.label} - R${opt.price}
+          </option>`
+        ).join("")}
+      </select>` : "";
+
+    const imageHTML = prod.images ? `
       <div class="slider">
         <button class="prev">❮</button>
-        <img id="product-image" src="dragonfruit1.png" alt="Dragon Fruit">
+        <img class="product-image" src="${prod.images[0]}" data-img-index="0">
         <button class="next">❯</button>
       </div>
+    ` : `
+      <img src="${prod.image}" alt="${prod.name}">
+    `;
 
-      <h3>Dragon Fruit</h3>
-      <p>Healthy organic Dragon Fruit cuttings ready to grow in your garden.</p>
-    </div>
+    card.innerHTML = `
+      ${imageHTML}
+      <h3>${prod.name}</h3>
+      <p>${prod.description}</p>
+      <div class="price">R${initialPrice}</div>
+      ${optionsHTML}
+      <p class="stock">Stock: ${currentStock}</p>
 
-  </div>
+      <div class="qty-box">
+        <button class="minus">−</button>
+        <input type="number" min="1" value="1">
+        <button class="plus">+</button>
+      </div>
 
-  <script src="script.js"></script>
-</body>
+      <button class="add-btn">Add to Cart</button>
+    `;
 
+    const qtyInput = card.querySelector("input");
+    const priceDiv = card.querySelector(".price");
+    const stockDiv = card.querySelector(".stock");
+    const select = card.querySelector(".options-select");
 
-// ======= CART FUNCTIONS =======
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-}
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartTotal();
-}
-function updateCartTotal() {
-    const cart = getCart();
-    let total = 0;
-    cart.forEach(item => total += item.price * item.quantity);
-    document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
-}
-function addToCart(name, price, quantity=1, image="") {
-    let cart = getCart();
-    const existing = cart.find(item => item.name === name && item.price === price);
-    if(existing) existing.quantity += quantity;
-    else cart.push({name, price, quantity, image});
-    saveCart(cart);
-}
+    card.querySelector(".minus").onclick = () => {
+      if (qtyInput.value > 1) qtyInput.value--;
+    };
 
-// ===== RENDER PRODUCTS =====
-function renderProducts() {
-    const container = document.getElementById("products-container");
-    if (!container) return;
+    card.querySelector(".plus").onclick = () => {
+      if (qtyInput.value < currentStock) qtyInput.value++;
+    };
 
-    container.innerHTML = "";
+    if (select) {
+      select.onchange = () => {
+        priceDiv.textContent = "R" + select.value;
+        currentStock = parseInt(select.options[select.selectedIndex].dataset.stock);
+        stockDiv.textContent = "Stock: " + currentStock;
+        if (qtyInput.value > currentStock) qtyInput.value = currentStock;
+      };
+    }
 
-    seedlingsProducts.forEach(prod => {
-        const card = document.createElement("div");
-        card.className = "product-card";
+    card.querySelector(".add-btn").onclick = () => {
+      const qty = parseInt(qtyInput.value);
+      const price = select ? parseInt(select.value) : prod.price;
+      const name = select
+        ? `${prod.name} (${select.options[select.selectedIndex].text})`
+        : prod.name;
 
-        // Determine if product has options (like Dragon Fruit)
-        let optionsHTML = "";
-        let initialPrice = prod.price || (prod.options ? prod.options[0].price : 0);
-        let initialStock = prod.stock || (prod.options ? prod.options[0].stock : 0);
+      if (qty > currentStock) {
+        alert("Not enough stock available.");
+        return;
+      }
 
-        if(prod.options) {
-            optionsHTML = `<select class="options-select">
-                ${prod.options.map(opt => `<option value="${opt.price}" data-stock="${opt.stock}">${opt.label} - R${opt.price}</option>`).join("")}
-            </select>`;
-            initialStock = prod.options[0].stock; // stock of first option
-        }
+      addToCart(name, price, qty, prod.image || prod.images?.[0]);
+    };
 
-        card.innerHTML = `
-            <img src="${prod.image}" alt="${prod.name}">
-            <h3>${prod.name}</h3>
-            <p>${prod.description}</p>
-            <div class="price">R${initialPrice}</div>
-            ${optionsHTML}
-            <p class="stock">Stock: ${initialStock}</p>
-            <div class="qty-box">
-                <button class="minus">−</button>
-                <input type="number" min="1" value="1">
-                <button class="plus">+</button>
-            </div>
-            <button class="add-btn">Add to Cart</button>
-        `;
-
-        const qtyInput = card.querySelector("input");
-        const priceDiv = card.querySelector(".price");
-        const stockDiv = card.querySelector(".stock");
-        const select = card.querySelector(".options-select");
-
-        let currentStock = initialStock;
-
-        // Handle minus/plus buttons
-        card.querySelector(".minus").onclick = () => { 
-            if(qtyInput.value > 1) qtyInput.value--; 
-        };
-        card.querySelector(".plus").onclick = () => { 
-            if(qtyInput.value < currentStock) qtyInput.value++; // cannot exceed stock
-        };
-
-        // Update price and stock if dropdown changes
-        if(select) {
-            select.onchange = () => {
-                priceDiv.textContent = "R" + select.value;
-                currentStock = parseInt(select.options[select.selectedIndex].dataset.stock);
-                stockDiv.textContent = "Stock: " + currentStock;
-                if(qtyInput.value > currentStock) qtyInput.value = currentStock;
-            };
-        }
-
-        // Add to cart
-        card.querySelector(".add-btn").onclick = () => {
-            const qty = parseInt(qtyInput.value);
-            if(qty > currentStock) {
-                alert("Not enough stock available.");
-                return;
-            }
-            const price = select ? parseInt(select.value) : prod.price;
-            const name = select ? `${prod.name} (${select.options[select.selectedIndex].text})` : prod.name;
-            addToCart(name, price, qty, prod.image);
-        };
-
-        container.appendChild(card);
-    });
+    container.appendChild(card);
+  });
 }
 
-document.addEventListener("DOMContentLoaded", renderProducts);
+/* ================= IMAGE SLIDER ================= */
 
+document.addEventListener("click", e => {
+  if (!e.target.classList.contains("prev") && !e.target.classList.contains("next")) return;
+
+  const slider = e.target.closest(".slider");
+  const img = slider.querySelector(".product-image");
+  const card = e.target.closest(".product-card");
+  const productName = card.querySelector("h3").textContent;
+  const product = seedlingsProducts.find(p => p.name === productName);
+
+  let index = parseInt(img.dataset.imgIndex);
+  index = e.target.classList.contains("next")
+    ? (index + 1) % product.images.length
+    : (index - 1 + product.images.length) % product.images.length;
+
+  img.src = product.images[index];
+  img.dataset.imgIndex = index;
+});
+
+/* ================= INIT ================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderProducts();
+  updateCartTotal();
+});
 </script>
-
-</body>
-</html>
