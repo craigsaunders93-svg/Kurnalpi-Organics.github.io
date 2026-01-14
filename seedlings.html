@@ -1,6 +1,7 @@
 <script>
-/* ================= PRODUCTS ================= */
-
+/* ======================== 
+   SEEDLINGS PRODUCTS DATA 
+======================== */
 const seedlingsProducts = [
   {
     name: "Dragon Fruit",
@@ -14,28 +15,29 @@ const seedlingsProducts = [
   {
     name: "Basil Seedling",
     price: 25,
-    image: "basil-seedling.png",
+    images: ["basil-seedling.png"],
     stock: 20,
     description: "Fragrant basil seedling perfect for fresh herbs and cooking."
   },
   {
     name: "Lettuce Seedling",
     price: 30,
-    image: "lettuce-seedling.png",
+    images: ["lettuce-seedling.png"],
     stock: 15,
     description: "Crisp and fresh lettuce seedling to start your salad garden."
   },
   {
     name: "Spinach Seedling",
     price: 28,
-    image: "spinach-seedling.png",
+    images: ["spinach-seedling.png"],
     stock: 12,
     description: "Organic spinach seedlings for nutrient-rich leafy greens."
   }
 ];
 
-/* ================= CART FUNCTIONS ================= */
-
+/* ======================== 
+   CART FUNCTIONS (STOCK-AWARE) 
+======================== */
 function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
 }
@@ -49,48 +51,54 @@ function updateCartTotal() {
   const cart = getCart();
   let total = 0;
   cart.forEach(item => total += item.price * item.quantity);
-  document.getElementById("cart-total").textContent = "R" + total.toFixed(2);
+  document.getElementById("cart-total")?.textContent = "R" + total.toFixed(2);
 }
 
-function addToCart(name, price, quantity = 1, image = "") {
+function addToCart(name, price, quantity = 1, image = "", pack = "", stock = Infinity) {
   const cart = getCart();
-  const existing = cart.find(item => item.name === name && item.price === price);
-  if (existing) existing.quantity += quantity;
-  else cart.push({ name, price, quantity, image });
+  const existing = cart.find(item => item.name === name && item.pack === pack);
+  
+  if (existing) {
+    if (existing.quantity + quantity > stock) {
+      alert(`Only ${stock} available for "${name}".`);
+      existing.quantity = stock;
+    } else {
+      existing.quantity += quantity;
+    }
+  } else {
+    cart.push({ name, price, quantity: Math.min(quantity, stock), image, pack, stock });
+  }
   saveCart(cart);
 }
 
-/* ================= RENDER PRODUCTS ================= */
-
+/* ======================== 
+   RENDER PRODUCTS 
+======================== */
 function renderProducts() {
   const container = document.getElementById("products-container");
+  if (!container) return;
   container.innerHTML = "";
 
-  seedlingsProducts.forEach((prod, index) => {
+  seedlingsProducts.forEach(prod => {
     const card = document.createElement("div");
     card.className = "product-card";
 
-    let initialPrice = prod.price || prod.options?.[0].price || 0;
-    let currentStock = prod.stock || prod.options?.[0].stock || 0;
+    const initialPrice = prod.price || prod.options?.[0]?.price || 0;
+    let currentStock = prod.stock || prod.options?.[0]?.stock || 0;
 
     const optionsHTML = prod.options ? `
       <select class="options-select">
         ${prod.options.map(opt =>
-          `<option value="${opt.price}" data-stock="${opt.stock}">
-            ${opt.label} - R${opt.price}
-          </option>`
+          `<option value="${opt.price}" data-stock="${opt.stock}">${opt.label} - R${opt.price}</option>`
         ).join("")}
       </select>` : "";
 
-    const imageHTML = prod.images ? `
+    const imageHTML = prod.images.length > 1 ? `
       <div class="slider">
         <button class="prev">❮</button>
         <img class="product-image" src="${prod.images[0]}" data-img-index="0">
         <button class="next">❯</button>
-      </div>
-    ` : `
-      <img src="${prod.image}" alt="${prod.name}">
-    `;
+      </div>` : `<img class="product-image" src="${prod.images[0]}">`;
 
     card.innerHTML = `
       ${imageHTML}
@@ -113,15 +121,13 @@ function renderProducts() {
     const priceDiv = card.querySelector(".price");
     const stockDiv = card.querySelector(".stock");
     const select = card.querySelector(".options-select");
+    const productImage = card.querySelector(".product-image");
 
-    card.querySelector(".minus").onclick = () => {
-      if (qtyInput.value > 1) qtyInput.value--;
-    };
+    /* Quantity buttons */
+    card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
+    card.querySelector(".plus").onclick = () => { if(qtyInput.value < currentStock) qtyInput.value++; };
 
-    card.querySelector(".plus").onclick = () => {
-      if (qtyInput.value < currentStock) qtyInput.value++;
-    };
-
+    /* Options select change */
     if (select) {
       select.onchange = () => {
         priceDiv.textContent = "R" + select.value;
@@ -131,37 +137,36 @@ function renderProducts() {
       };
     }
 
+    /* Add to cart button */
     card.querySelector(".add-btn").onclick = () => {
       const qty = parseInt(qtyInput.value);
       const price = select ? parseInt(select.value) : prod.price;
-      const name = select
-        ? `${prod.name} (${select.options[select.selectedIndex].text})`
-        : prod.name;
+      const pack = select ? select.options[select.selectedIndex].text : "";
+      const name = pack ? `${prod.name} (${pack})` : prod.name;
 
-      if (qty > currentStock) {
-        alert("Not enough stock available.");
-        return;
-      }
+      if(qty > currentStock) { alert("Not enough stock available."); return; }
 
-      addToCart(name, price, qty, prod.image || prod.images?.[0]);
+      addToCart(name, price, qty, productImage.src, pack, currentStock);
+      alert(`${qty} x "${name}" added to cart.`);
     };
 
     container.appendChild(card);
   });
 }
 
-/* ================= IMAGE SLIDER ================= */
-
+/* ======================== 
+   IMAGE SLIDER CLICK 
+======================== */
 document.addEventListener("click", e => {
-  if (!e.target.classList.contains("prev") && !e.target.classList.contains("next")) return;
+  if(!e.target.classList.contains("prev") && !e.target.classList.contains("next")) return;
 
   const slider = e.target.closest(".slider");
   const img = slider.querySelector(".product-image");
   const card = e.target.closest(".product-card");
-  const productName = card.querySelector("h3").textContent;
+  const productName = card.querySelector("h3").textContent.split(" (")[0]; // ignore option in parentheses
   const product = seedlingsProducts.find(p => p.name === productName);
-
   let index = parseInt(img.dataset.imgIndex);
+
   index = e.target.classList.contains("next")
     ? (index + 1) % product.images.length
     : (index - 1 + product.images.length) % product.images.length;
@@ -170,8 +175,9 @@ document.addEventListener("click", e => {
   img.dataset.imgIndex = index;
 });
 
-/* ================= INIT ================= */
-
+/* ======================== 
+   INIT 
+======================== */
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
   updateCartTotal();
