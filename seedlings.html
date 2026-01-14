@@ -1,6 +1,6 @@
 <script>
-/* ======================== 
-   SEEDLINGS PRODUCTS DATA 
+/* ========================
+   SEEDLINGS PRODUCTS DATA
 ======================== */
 const seedlingsProducts = [
   {
@@ -35,8 +35,8 @@ const seedlingsProducts = [
   }
 ];
 
-/* ======================== 
-   CART FUNCTIONS (STOCK-AWARE) 
+/* ========================
+   CART FUNCTIONS (STOCK-AWARE)
 ======================== */
 function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
@@ -71,8 +71,8 @@ function addToCart(name, price, quantity = 1, image = "", pack = "", stock = Inf
   saveCart(cart);
 }
 
-/* ======================== 
-   RENDER PRODUCTS 
+/* ========================
+   RENDER SEEDLINGS PRODUCTS
 ======================== */
 function renderProducts() {
   const container = document.getElementById("products-container");
@@ -154,8 +154,8 @@ function renderProducts() {
   });
 }
 
-/* ======================== 
-   IMAGE SLIDER CLICK 
+/* ========================
+   IMAGE SLIDER CLICK
 ======================== */
 document.addEventListener("click", e => {
   if(!e.target.classList.contains("prev") && !e.target.classList.contains("next")) return;
@@ -163,7 +163,7 @@ document.addEventListener("click", e => {
   const slider = e.target.closest(".slider");
   const img = slider.querySelector(".product-image");
   const card = e.target.closest(".product-card");
-  const productName = card.querySelector("h3").textContent.split(" (")[0]; // ignore option in parentheses
+  const productName = card.querySelector("h3").textContent.split(" (")[0];
   const product = seedlingsProducts.find(p => p.name === productName);
   let index = parseInt(img.dataset.imgIndex);
 
@@ -175,8 +175,8 @@ document.addEventListener("click", e => {
   img.dataset.imgIndex = index;
 });
 
-/* ======================== 
-   INIT 
+/* ========================
+   INIT
 ======================== */
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
