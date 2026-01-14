@@ -1,5 +1,5 @@
 // ========================
-// CART.JS – STOCK-AWARE MODERN VERSION
+// CART.JS – MODERN STOCK-AWARE + MULTI-IMAGE SUPPORT
 // ========================
 
 // ---------- GET / SAVE CART ----------
@@ -90,7 +90,7 @@ function renderCartPage() {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>
-        <img src="${item.image ?? 'placeholder.png'}" width="80">
+        <img src="${item.image ?? 'placeholder.png'}" width="80" style="object-fit:contain">
         <div>${item.name}</div>
       </td>
       <td>${item.pack || "-"}</td>
@@ -175,5 +175,7 @@ function attachCartActions() {
 // ========================
 document.addEventListener("DOMContentLoaded", () => {
   updateCartDisplay();
-  document.getElementById("cart-items") && renderCartPage();
+  if (document.getElementById("cart-items")) {
+    renderCartPage();
+  }
 });
