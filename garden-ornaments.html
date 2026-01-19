@@ -176,11 +176,10 @@ function renderProducts() {
             <h3>${prod.name}</h3>
             <p>${prod.desc}</p>
 
-            ${prod.variants ? `
-                <select class="variant-select">
-                    ${prod.variants.map((v, i) => `<option value="${i}">${v}</option>`).join("")}
-                </select>
-            ` : ""}
+            ${prod.images ? `
+    <button class="variant-btn">View ${prod.variants ? prod.variants[1] : "Alternate"}</button>
+` : ""}
+
 
             <div class="price">R${prod.price}</div>
             <div class="stock">Stock: ${prod.stock}</div>
