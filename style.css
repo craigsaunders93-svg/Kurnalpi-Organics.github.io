@@ -28,7 +28,7 @@ main::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.65); /* DARKER OVERLAY */
+    background: rgba(0,0,0,0.65);
     z-index: -1;
 }
 
@@ -169,6 +169,14 @@ nav.nav a:hover {
     box-shadow: 0 6px 14px rgba(0,0,0,0.35);
 }
 
+/* ========================
+   IMAGE + DRAGON FRUIT ARROWS
+   ======================== */
+.image-wrap {
+    position: relative;
+    display: inline-block;
+}
+
 .product-card img {
     width: 120px;
     height: 120px;
@@ -176,6 +184,37 @@ nav.nav a:hover {
     margin-bottom: 10px;
 }
 
+.img-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background: #ffffff;
+    border: 1px solid #2f5d3a;
+    color: #2f5d3a;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.img-arrow.left {
+    left: -30px;
+}
+
+.img-arrow.right {
+    right: -30px;
+}
+
+.img-arrow:hover {
+    background: #f0f0f0;
+}
+
+/* ========================
+   PRODUCT TEXT
+   ======================== */
 .product-card h3 {
     margin: 10px 0 6px;
 }
@@ -297,5 +336,13 @@ footer {
 
     main {
         padding: 25px;
+    }
+
+    .img-arrow.left {
+        left: -22px;
+    }
+
+    .img-arrow.right {
+        right: -22px;
     }
 }
