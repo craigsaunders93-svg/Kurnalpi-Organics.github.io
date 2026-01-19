@@ -133,14 +133,14 @@ const products = [
         desc: "Even when resting, the heart can still watch over what matters.<br>Length: 95mm"
     },
     {
-    name: "Contour",
-    price: 50,
-    stock: 10,
-    images: ["contour.png", "contour1.png"],
-    variants: ["Circle", "Square"],
-    desc: "Carved by time, held in stone.<br>Width: 125mm"
-},
-{
+        name: "Contour",
+        price: 50,
+        stock: 10,
+        images: ["contour.png", "contour1.png"],
+        variants: ["Circle", "Square"],
+        desc: "Carved by time, held in stone.<br>Width: 125mm"
+    },
+    {
         name: "Mushroom",
         price: 25,
         stock: 10,
@@ -153,11 +153,12 @@ const products = [
         stock: 10,
         image: "succulent.png",
         desc: "I'm not lazy, I'm on succulent time.<br>Height: 45mm, Width: 75mm"
-    },
+    }
 ];
-    
 
-// ===== RENDER PRODUCTS WITH STOCK =====
+// =====================
+// RENDER PRODUCTS
+// =====================
 function renderProducts() {
     const container = document.getElementById("products-container");
     if (!container) return;
@@ -168,8 +169,8 @@ function renderProducts() {
         const card = document.createElement("div");
         card.className = "product-card";
 
-        // Handle image logic
         const mainImage = prod.image || (prod.images ? prod.images[0] : "");
+        let currentIndex = 0;
 
         card.innerHTML = `
             <img src="${mainImage}" alt="${prod.name}" class="product-img">
@@ -177,9 +178,10 @@ function renderProducts() {
             <p>${prod.desc}</p>
 
             ${prod.images ? `
-    <button class="variant-btn">View ${prod.variants ? prod.variants[1] : "Alternate"}</button>
-` : ""}
-
+                <button class="variant-btn">
+                    View ${prod.variants ? prod.variants[1] : "Alternate"}
+                </button>
+            ` : ""}
 
             <div class="price">R${prod.price}</div>
             <div class="stock">Stock: ${prod.stock}</div>
@@ -199,22 +201,22 @@ function renderProducts() {
         const plusBtn = card.querySelector(".plus");
         const addBtn = card.querySelector(".add-btn");
 
-        // Image toggle button
-if (prod.images) {
-    const variantBtn = card.querySelector(".variant-btn");
-    let currentIndex = 0;
+        // IMAGE TOGGLE (for Contour)
+        if (prod.images) {
+            const variantBtn = card.querySelector(".variant-btn");
 
-    variantBtn.onclick = () => {
-        currentIndex = (currentIndex + 1) % prod.images.length;
-        img.src = prod.images[currentIndex];
+            variantBtn.onclick = () => {
+                currentIndex = (currentIndex + 1) % prod.images.length;
+                img.src = prod.images[currentIndex];
 
-        if (prod.variants) {
-            variantBtn.textContent = `View ${prod.variants[(currentIndex + 1) % prod.variants.length]}`;
+                if (prod.variants) {
+                    variantBtn.textContent =
+                        `View ${prod.variants[(currentIndex + 1) % prod.variants.length]}`;
+                }
+            };
         }
-    };
-}
 
-
+        // QUANTITY CONTROLS
         minusBtn.onclick = () => {
             if (qtyInput.value > 1) qtyInput.value--;
         };
@@ -223,6 +225,7 @@ if (prod.images) {
             if (qtyInput.value < prod.stock) qtyInput.value++;
         };
 
+        // ADD TO CART
         addBtn.onclick = () => {
             const qty = parseInt(qtyInput.value);
             if (qty > prod.stock) {
@@ -231,7 +234,7 @@ if (prod.images) {
             }
 
             const variantText = prod.variants
-                ? ` (${card.querySelector(".variant-select").selectedOptions[0].text})`
+                ? ` (${prod.variants[currentIndex]})`
                 : "";
 
             addToCart(
