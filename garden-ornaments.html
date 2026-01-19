@@ -73,7 +73,7 @@ footer { text-align: center; padding: 15px 0; background-color: rgba(47, 93, 58,
 
 <script>
 // =====================
-// PRODUCTS DATA
+// PRODUCT DATA
 // =====================
 const products = [
     {
@@ -170,13 +170,12 @@ function renderProducts() {
         card.className = "product-card";
 
         let currentIndex = 0;
-        const mainImage = prod.image || (prod.images ? prod.images[0] : "");
-
-        const basePrice = prod.price || (prod.variants ? prod.variants[0].price : 0);
+        const imageSrc = prod.image || (prod.images ? prod.images[0] : "");
+        const startPrice = prod.price || (prod.variants ? prod.variants[0].price : 0);
 
         card.innerHTML = `
-            <div style="position:relative;">
-                <img src="${mainImage}" class="product-img">
+            <div class="image-wrap">
+                <img src="${imageSrc}" class="product-img">
 
                 ${prod.images ? `
                     <button class="img-arrow left">‹</button>
@@ -195,7 +194,7 @@ function renderProducts() {
                 </select>
             ` : ""}
 
-            <div class="price">R<span class="price-value">${basePrice}</span></div>
+            <div class="price">R<span class="price-value">${startPrice}</span></div>
             <div class="stock">Stock: ${prod.stock}</div>
 
             <div class="qty-box">
@@ -213,7 +212,6 @@ function renderProducts() {
         const leftArrow = card.querySelector(".img-arrow.left");
         const rightArrow = card.querySelector(".img-arrow.right");
 
-        // UPDATE VARIANT
         function updateVariant(index) {
             currentIndex = index;
             img.src = prod.images[currentIndex];
@@ -221,30 +219,24 @@ function renderProducts() {
             priceValue.textContent = prod.variants[currentIndex].price;
         }
 
-        // DROPDOWN CHANGE
         if (variantSelect) {
             variantSelect.onchange = () => {
                 updateVariant(parseInt(variantSelect.value));
             };
         }
 
-        // LEFT ARROW
         if (leftArrow) {
             leftArrow.onclick = () => {
-                const next = (currentIndex - 1 + prod.images.length) % prod.images.length;
-                updateVariant(next);
+                updateVariant((currentIndex - 1 + prod.images.length) % prod.images.length);
             };
         }
 
-        // RIGHT ARROW
         if (rightArrow) {
             rightArrow.onclick = () => {
-                const next = (currentIndex + 1) % prod.images.length;
-                updateVariant(next);
+                updateVariant((currentIndex + 1) % prod.images.length);
             };
         }
 
-        // ADD TO CART
         card.querySelector(".add-btn").onclick = () => {
             const qty = parseInt(card.querySelector("input").value);
             const variantText = prod.variants ? ` (${prod.variants[currentIndex].name})` : "";
