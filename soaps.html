@@ -11,6 +11,9 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: url("background.jpg") center / cover no-repeat fixed;
+    color: white;
 }
 
 .page-wrapper {
@@ -19,10 +22,33 @@ html, body {
     flex-direction: column;
 }
 
+header.site-header {
+    background: rgba(47, 93, 58, 0.85);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 85px;
+}
+
+nav.nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 20px;
+}
+
+nav.nav a:hover {
+    opacity: 0.8;
+}
+
 main {
     flex: 1;
-    position: relative;
     padding: 40px;
+    position: relative;
 }
 
 main::before {
@@ -33,7 +59,6 @@ main::before {
     z-index: -1;
 }
 
-/* PRODUCT GRID */
 .products-container {
     max-width: 1200px;
     margin: auto;
@@ -56,6 +81,7 @@ main::before {
     height: 250px;
     object-fit: contain;
     margin-bottom: 10px;
+    cursor: pointer; /* clickable for popup */
 }
 
 .product-card h3 {
@@ -73,14 +99,12 @@ main::before {
     margin: 10px 0;
 }
 
-/* STOCK */
 .stock {
     font-size: 14px;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-/* QUANTITY */
 .qty-box {
     display: flex;
     justify-content: center;
@@ -100,7 +124,6 @@ main::before {
     text-align: center;
 }
 
-/* ADD BUTTON */
 .add-btn {
     background: #1f4d30;
     color: white;
@@ -114,7 +137,6 @@ main::before {
     background: #163823;
 }
 
-/* FOOTER */
 footer {
     text-align: center;
     padding: 15px 0;
@@ -122,6 +144,27 @@ footer {
     color: white;
     font-size: 14px;
     font-weight: bold;
+}
+
+/* POPUP MODAL */
+#img-popup {
+    display: none;
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+#img-popup img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+}
+
+#img-popup:active {
+    display: none; /* click outside to close */
 }
 </style>
 </head>
@@ -131,19 +174,14 @@ footer {
 <div class="page-wrapper">
 
 <header class="site-header">
-    <div class="header-inner">
-        <a href="index.html">
-            <img src="logo.png" alt="Kurnalpi Organics Logo" class="logo">
-        </a>
-
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="products.html">Products</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="cart.html">🛒 <span id="cart-total">R0.00</span></a>
-        </nav>
-    </div>
+    <a href="index.html"><img src="logo.png" class="logo" alt="Kurnalpi Organics"></a>
+    <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="products.html">Products</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="cart.html">🛒 <span id="cart-total">R0.00</span></a>
+    </nav>
 </header>
 
 <main>
@@ -157,47 +195,22 @@ footer {
     &copy; 2026 Kurnalpi Organics. All rights reserved.
 </footer>
 
+<!-- IMAGE POPUP -->
+<div id="img-popup" onclick="this.style.display='none'">
+    <img src="" id="popup-img">
+</div>
+
 </div>
 
 <script src="cart.js"></script>
-
 <script>
-// ===== PRODUCTS WITH STOCK =====
+// ===== PRODUCTS =====
 const soapProducts = [
     { name: "Lavender Soap", price: 60, stock: 12, image: "lsoap.png", description: "Handcrafted soap infused with calming lavender essential oil for gentle cleansing and relaxation." },
     { name: "Charcoal Detox Soap", price: 70, stock: 15, image: "char.png", description: "Activated charcoal soap that draws out impurities and leaves skin feeling clean and balanced." },
     { name: "Aloe Vera Soap", price: 65, stock: 10, image: "aloe.png", description: "Soothing aloe vera soap ideal for sensitive skin, helping calm and moisturise naturally." },
     { name: "Rosemary & Mint Soap", price: 65, stock: 9, image: "rose.png", description: "Invigorating herbal soap with rosemary and mint for a refreshing, cooling cleanse." }
 ];
-
-// ===== CART FUNCTIONS =====
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartTotal();
-}
-
-function updateCartTotal() {
-    const cart = getCart();
-    let total = 0;
-    cart.forEach(i => total += i.price * i.quantity);
-    const el = document.getElementById("cart-total");
-    if (el) el.textContent = "R" + total.toFixed(2);
-}
-
-function addToCart(name, price, quantity = 1, image = "") {
-    const cart = getCart();
-    const existing = cart.find(i => i.name === name);
-    if (existing) {
-        existing.quantity += quantity;
-    } else {
-        cart.push({ name, price, quantity, image });
-    }
-    saveCart(cart);
-}
 
 // ===== RENDER PRODUCTS =====
 function renderProducts() {
@@ -209,7 +222,7 @@ function renderProducts() {
         card.className = "product-card";
 
         card.innerHTML = `
-            <img class="popup-img" src="${prod.image}" alt="${prod.name}">
+            <img src="${prod.image}" alt="${prod.name}">
             <h3>${prod.name}</h3>
             <p>${prod.description}</p>
             <div class="price">R${prod.price}</div>
@@ -223,14 +236,21 @@ function renderProducts() {
         `;
 
         const qtyInput = card.querySelector("input");
-        const stockDiv = card.querySelector(".stock");
-        const img = card.querySelector(".popup-img");
+        const img = card.querySelector("img");
 
-        // Quantity buttons
+        // IMAGE POPUP CLICK
+        img.onclick = () => {
+            const popup = document.getElementById("img-popup");
+            const popupImg = document.getElementById("popup-img");
+            popupImg.src = prod.image;
+            popup.style.display = "flex";
+        };
+
+        // QUANTITY BUTTONS
         card.querySelector(".minus").onclick = () => { if(qtyInput.value > 1) qtyInput.value--; };
         card.querySelector(".plus").onclick = () => { if(qtyInput.value < prod.stock) qtyInput.value++; };
 
-        // Add to cart
+        // ADD TO CART
         card.querySelector(".add-btn").onclick = () => { 
             const qty = parseInt(qtyInput.value);
             if(qty > prod.stock){
@@ -238,44 +258,14 @@ function renderProducts() {
                 return;
             }
             addToCart(prod.name, prod.price, qty, prod.image);
-            alert(`${qty} x "${prod.name}" added to cart.`);
         };
 
         container.appendChild(card);
     });
 }
 
-// ===== IMAGE POPUP =====
-function setupImagePopup() {
-    const modalHTML = document.createElement("div");
-    modalHTML.id = "image-modal";
-    modalHTML.style.cssText = `
-        display:none; position:fixed; inset:0;
-        background: rgba(0,0,0,0.85);
-        justify-content:center; align-items:center;
-        z-index:9999; cursor:pointer;
-    `;
-    modalHTML.innerHTML = `<img id="modal-image" style="max-width:90%; max-height:90%; border-radius:12px;">`;
-    document.body.appendChild(modalHTML);
-
-    document.addEventListener("click", e => {
-        const modal = document.getElementById("image-modal");
-        const modalImg = document.getElementById("modal-image");
-
-        if(e.target.matches(".popup-img")) {
-            modal.style.display = "flex";
-            modalImg.src = e.target.src;
-        } else if(e.target === modal || e.target === modalImg) {
-            modal.style.display = "none";
-            modalImg.src = "";
-        }
-    });
-}
-
-// ===== INIT =====
-document.addEventListener("DOMContentLoaded", () => {
-    renderProducts();
-    updateCartTotal();
-    setupImagePopup();
-});
+document.addEventListener("DOMContentLoaded", renderProducts);
 </script>
+
+</body>
+</html>
